@@ -4,16 +4,16 @@ project(qpu C)
 set(CMAKE_C_STANDARD 23)
 
 # Add SDL3 paths
-set(SDL3_DIR "${CMAKE_CURRENT_SOURCE_DIR}/lib/SDL3")
+set(SDL3_DIR "${CMAKE_CURRENT_SOURCE_DIR}/includes/SDL3")
 set(SDL3_LIBRARIES "${SDL3_DIR}/lib")
 
 # Add SDL include directory
-include_directories(lib/SDL3/include)
+include_directories(includes/SDL3/include)
 
 # Link directories where SDL static libs are located
 link_directories(${SDL3_LIBRARIES})
 
-add_executable(qpu lib/qpu.h
+add_executable(qpu includes/qpu.h
         src/main.c)
 
 target_compile_options(qpu PRIVATE

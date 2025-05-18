@@ -1,11 +1,9 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <windows.h>
-
 #include "..\asm\assembler\asm.c"
+#include "qpu.c"
 
 const char* help = "\nFormat: qpu [-a] [asm file location] [-d] [binary location] [-t] [-s] [-h]"
-                   "\n    [The default setting are: /programs/placeholder as binary, no disassembly, 10mhz speed, no tests.]"
+                   "\n    [The default setting are: /programs/placeholder as binary, "
+                                             "no disassembly, 10mhz speed, no tests.]"
                    "\nFlags: "
                    "\n-a - assemble"
                    "\n    [location of .s to be assembled]"
@@ -31,8 +29,9 @@ const char* help = "\nFormat: qpu [-a] [asm file location] [-d] [binary location
                    "\n-h - help"
                    "\n    [ignores all other flags and prints allat]";
 
-// clear terminal macro
-// if windows - uses system cls, otherwise - system clear.
+// Clears the terminal.
+// If platform is Windows - uses system cls,
+// Otherwise              - uses system clear.
 void clear_terminal(void) {
 #ifdef _WIN32
     system("cls");
@@ -42,12 +41,11 @@ void clear_terminal(void) {
 }
 
 
+
 int main(int argc, char *argv[]) {
     // handle arguments
     if (argc == 1)
-        printf("No arguments specified! The cpu will run under default settings!"
-             "\nAssemble? No! \nDisassemble? No! \nBinary location? ../programs/placeholder! \nTest? No! \nSpeed? 10mhz!"
-             "\nPress enter to continue");
+        printf("No arguments specified! The cpu will run under default settings!");
     else
         printf("\nHuh!");
 

@@ -71,4 +71,38 @@ IDVI Rs, Imm8	    11110 SSS	IIII IIII
 Halt	            1111 1111
 */
 
+#include <stdio.h>
+#include <stdlib.h>
+#include <stdint.h>
+#include <string.h>
+
+// Memory map:
+// 0x0000 - 0x3FFF: Not banked (Low ram)
+// 0x4000 - 0x7FFF: Banked (High ram)
+// 0x8000 - 0xDFFF: Kernel/OS (Ram, privileged access)
+// 0xE000 - 0xFFFF: BIOS (Rom, privileged access + write protected)
+
+// Definitions
+// TODO: implement ts later
+#define ADDRESS_SPACE   0x10000
+#define REGISTER_COUNT  8
+#define BIOS_START      0xE000
+
+#define STACK_SIZE      0x1000
+#define LOW_RAM_SIZE    0x4000  // 16 KB
+#define HIGH_RAM_SIZE   0x4000  // 16 KB
+#define KERNEL_RAM_SIZE 0x6000 // 24 KB
+#define BIOS_SIZE       0x2000  // 8 KB
+
+// Types
+typedef uint8_t byte;
+typedef uint16_t word;
+
+// Addressable memory
+typedef struct MEM {
+    byte mem[ADDRESS_SPACE];
+} MEM;
+
+
+
 #endif //QPU_LIB_H
