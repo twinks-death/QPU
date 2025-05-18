@@ -5,7 +5,7 @@
 #include "..\asm\assembler\asm.c"
 
 const char* help = "\nFormat: qpu [-a] [asm file location] [-d] [binary location] [-t] [-s] [-h]"
-                   "\n  The "
+                   "\n  The default setting are: /programs/placeholder as binary, no disassembly, 10mhz speed, no tests."
                    "\nFlags: "
                    "\n-a - assemble"
                    "\n    [location of .s to be assembled]"
