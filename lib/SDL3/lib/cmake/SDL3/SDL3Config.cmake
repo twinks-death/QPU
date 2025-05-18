@@ -11,7 +11,7 @@ set_package_properties(SDL3 PROPERTIES
 ####### Any changes to this file will be overwritten by the next CMake run ####
 ####### The input file was SDL3Config.cmake.in                            ########
 
-get_filename_component(PACKAGE_PREFIX_DIR "../../../.." ABSOLUTE)
+get_filename_component(PACKAGE_PREFIX_DIR "${CMAKE_CURRENT_LIST_DIR}/../../../" ABSOLUTE)
 
 macro(check_required_components _NAME)
   foreach(comp ${${_NAME}_FIND_COMPONENTS})
@@ -30,7 +30,7 @@ set(_sdl3_framework OFF)
 
 # Find SDL3::Headers
 if(NOT TARGET SDL3::Headers)
-  include("SDL3headersTargets.cmake")
+  include("${CMAKE_CURRENT_LIST_DIR}/SDL3headersTargets.cmake")
   if(NOT CMAKE_VERSION VERSION_LESS "3.25")
     set_property(TARGET SDL3::Headers PROPERTY SYSTEM 0)
   endif()
@@ -38,8 +38,8 @@ endif()
 set(SDL3_Headers_FOUND TRUE)
 
 # Find SDL3::SDL3-shared
-if(EXISTS "SDL3sharedTargets.cmake")
-  include("SDL3sharedTargets.cmake")
+if(EXISTS "${CMAKE_CURRENT_LIST_DIR}/SDL3sharedTargets.cmake")
+  include("${CMAKE_CURRENT_LIST_DIR}/SDL3sharedTargets.cmake")
   set(SDL3_SDL3-shared_FOUND TRUE)
 endif()
 
@@ -85,11 +85,11 @@ if(_sdl3_framework)
     set(SDL3_SDL3_test_FOUND TRUE)
   endif()
 else()
-  if(EXISTS "SDL3testTargets.cmake")
+  if(EXISTS "${CMAKE_CURRENT_LIST_DIR}/SDL3testTargets.cmake")
     set(SDL3_SDL3_test_FOUND TRUE)
 
     if(SDL3_SDL3_test_FOUND)
-      include("SDL3testTargets.cmake")
+      include("${CMAKE_CURRENT_LIST_DIR}/SDL3testTargets.cmake")
     endif()
   endif()
 endif()
