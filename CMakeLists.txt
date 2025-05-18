@@ -13,7 +13,8 @@ include_directories(lib/SDL3/include)
 # Link directories where SDL static libs are located
 link_directories(${SDL3_LIBRARIES})
 
-add_executable(qpu src/qpu.c lib/qpu.h)
+add_executable(qpu lib/qpu.h
+        src/main.c)
 
 target_compile_options(qpu PRIVATE
         -O3
