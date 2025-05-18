@@ -13,19 +13,20 @@ include_directories(lib/SDL3/include)
 # Link directories where SDL static libs are located
 link_directories(${SDL3_LIBRARIES})
 
-add_executable(qpu src/qpu.c src/qpu-lib.h)
+add_executable(qpu src/qpu.c lib/qpu.h)
 
 target_compile_options(qpu PRIVATE
-        -Wall      # Enable all warnings
-        -Wextra    # Enable extra warnings
-        -Wpedantic # Enable strict ISO C warnings
         -O3
+        -Werror
+        -Wall
+        -Wpedantic
         -static
+        -v
 )
 
 # Link SDL3 static libraries
 target_link_libraries(qpu PRIVATE
-    ${SDL3_LIBRARIES}/libSDL3.dll.a
+    ${SDL3_LIBRARIES}/libSDL3.a
     ${SDL3_LIBRARIES}/libSDL3_test.a
     # Additional system libraries required by SDL
     mingw32
