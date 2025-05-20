@@ -76,6 +76,7 @@ Halt	            1111 1111
 #include <stdint.h>
 #include <string.h>
 
+
 // Memory map:
 // 0x0000 - 0x3FFF: Not banked (Low ram)
 // 0x4000 - 0x7FFF: Banked (High ram)
@@ -103,6 +104,14 @@ typedef struct MEM {
     byte mem[ADDRESS_SPACE];
 } MEM;
 
+struct EMU_FLAGS {
+    bool _assemble;
+    char *_assemble_file;
+    bool _disassemble;
+    char *_disassemble_output;
+    bool _test;
+    int _speed;
+};
 
 
 #endif //QPU_LIB_H

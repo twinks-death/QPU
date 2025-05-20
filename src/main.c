@@ -7,8 +7,9 @@ const char* help = "\nFormat: qpu [-a] [asm file location] [-d] [binary location
                    "\nFlags: "
                    "\n-a - assemble"
                    "\n    [location of .s to be assembled]"
+                   "\n    [creates a binary with '_bin' postfix in /programs]"
                    "\n-d - disassemble"
-                   "\n    [creates a copy of the binary loaded with '_disasm' postfix]"
+                   "\n    [creates a copy of the binary loaded with '_disasm' postfix in /programs]"
                    "\n    [ignored if binary not specified]"
                    "\n[location of the binary to be run.]"
                    "\n If not specified, defaults to placeholder in /programs]"
@@ -40,14 +41,23 @@ void clear_terminal(void) {
 #endif
 }
 
+int main(int argc, char * argv[]) {
 
+    struct EMU_FLAGS emu_flags;
 
-int main(int argc, char *argv[]) {
     // handle arguments
     if (argc == 1)
         printf("No arguments specified! The cpu will run under default settings!");
-    else
-        printf("\nHuh!");
+    else if (argc > 1 || argc < 9)
+        for (int i = 0; i < argc; i++) {
+            if (strcmp(argv[i], "-a") == 0)
+                emu_flags._assemble = true;
+
+            else if (strcmp(argv[i], "-d") == 0)
+                emu_flags._disassemble = true;
+            else if (strcmp(argv[i], "-t") == 0)
+
+        }
 
     // so shit won't close
     while (getchar() != '\n');
