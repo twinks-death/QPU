@@ -105,12 +105,12 @@ typedef struct MEM {
 } MEM;
 
 struct EMU_FLAGS {
-    bool _assemble;
-    char *_assemble_file;
-    bool _disassemble;
-    char *_disassemble_output;
-    bool _test;
-    int _speed;
+    bool assemble;
+    char *assemble_file = NULL;
+    bool disassemble;
+    char *disassemble_output = NULL;
+    bool test;
+    int speed;
 };
 
 
