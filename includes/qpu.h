@@ -104,14 +104,15 @@ typedef struct MEM {
     byte mem[ADDRESS_SPACE];
 } MEM;
 
-struct EMU_FLAGS {
+// Emulator flags
+struct {
     bool assemble;
     char *assemble_file = NULL;
     bool disassemble;
     char *disassemble_output = NULL;
     bool test;
     int speed;
-};
+} emu_flags;
 
 
 #endif //QPU_LIB_H
