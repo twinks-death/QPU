@@ -71,9 +71,9 @@ IDVI Rs, Imm8	    11110 SSS	IIII IIII
 Halt	            1111 1111
 */
 
+#include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <stdint.h>
 #include <string.h>
 
 
@@ -109,7 +109,7 @@ struct {
     bool assemble;
     char *assemble_file = NULL;
     bool disassemble;
-    char *disassemble_output = NULL;
+    char *disassemble_file = NULL;
     bool test;
     int speed;
 } emu_flags;

@@ -1,5 +1,5 @@
-#include "..\asm\assembler\asm.c"
 #include "qpu.c"
+#include "../asm/assembler/asm.c"
 
 const char* help = "\nFormat: qpu [-a] [asm file location] [-d] [binary location] [-t] [-s] [-h]"
                    "\n    [The default setting are: /programs/placeholder as binary, "
@@ -41,13 +41,14 @@ void clear_terminal(void) {
 #endif
 }
 
-int main(int argc, char * argv[]) {
-
+int
+main(int argc, char * argv[])
+{
     // handle arguments
     if (argc == 1)
         printf("\nNo arguments specified! The cpu will run under default settings!");
-
-    else if (argc > 1 || argc < 9)
+    else
+    {
         for (int i = 0; i < argc; i++)
         {
             // assemble
@@ -56,15 +57,21 @@ int main(int argc, char * argv[]) {
                 emu_flags.assemble = true;
 
                 if (i + 1 >= argc || argv[i + 1][0] == '-')
+                {
                     fprintf(stderr, "\nError: -a requires a file path\n");
                     return 1;
+                }
+
                 emu_flags.assemble_file = argv[++i];
 
                 // Try to open the file to check if it exists
                 FILE *file = fopen(emu_flags.assemble_file, "r");
                 if (file == NULL)
+                {
                     fprintf(stderr, "\nError opening file %s\n", emu_flags.assemble_file);
                     return 1;
+                }
+
                 fclose(file);
             }
 
@@ -73,18 +80,22 @@ int main(int argc, char * argv[]) {
                 emu_flags.disassemble = true;
 
                 if (i + 1 >= argc || argv[i + 1][0] == '-')
+                {
                     fprintf(stderr, "\nError: -d requires a file path\n");
-                return 1;
-                emu_flags.disassemble_output = argv[++i];
+                    return 1;
+                }
+                emu_flags.disassemble_file = argv[++i];
 
                 // Try to open the file to check if it exists
-                FILE *file = fopen(emu_flags.disassemble_output, "r");
-                if (file != NULL) {
-                    printf("\nFile %s already exists! Overwrite? (y/n) ", emu_flags.disassemble_output);
+                FILE *file = fopen(emu_flags.disassemble_file, "r");
+                if (file != NULL)
+                {
+                    printf("\nFile %s already exists! Overwrite? (y/n) ", emu_flags.disassemble_file);
+                    fclose(file);
                 }
-                fclose(file);
             }
         }
+    }
 
     // so shit won't close
     while (getchar() != '\n');
