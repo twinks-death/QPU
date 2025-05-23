@@ -106,12 +106,10 @@ typedef struct MEM {
 
 // Emulator flags
 struct {
-    bool assemble;
-    char *assemble_file = NULL;
-    bool disassemble;
-    char *disassemble_file = NULL;
-    bool test;
-    int speed;
+    bool assemble = false;
+    bool disassemble = false;
+    bool test = false;
+    byte speed = 2;
 } emu_flags;
 
 
