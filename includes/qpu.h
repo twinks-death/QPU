@@ -100,16 +100,16 @@ typedef uint8_t byte;
 typedef uint16_t word;
 
 // Addressable memory
-typedef struct MEM {
+typedef struct {
     byte mem[ADDRESS_SPACE];
 } MEM;
 
 // Emulator flags
 struct {
-    bool assemble = false;
-    bool disassemble = false;
-    bool test = false;
-    byte speed = 2;
+    bool assemble;
+    bool disassemble;
+    bool test;
+    char speed;
 } emu_flags;
 
 

@@ -1,4 +1,5 @@
 #include "qpu.c"
+#include "../includes/main.h"
 #include "../asm/assembler/asm.c"
 
 const char* help = "\nFormat: qpu [asm/bin file location] [-d] [-t] [-s] [-h]"
@@ -23,32 +24,34 @@ const char* help = "\nFormat: qpu [asm/bin file location] [-d] [-t] [-s] [-h]"
                    "\n-h - help"
                    "\n    [ignores all other flags and prints allat]";
 
-// Clears the terminal.
-// If platform is Windows - uses system cls,
-// Otherwise              - uses system clear.
-void clear_terminal(void) {
-#ifdef _WIN32
-    system("cls");
-#else
-    system("clear");
-#endif
-}
-
 int main(int argc, char * argv[])
 {
     // Handle arguments
     if (argc == 1)
-        printf("\nNo arguments specified! The cpu will run under default settings!");
+        printf( "\nNo arguments specified! The cpu will run under default settings!"
+
+                "\n[The default setting are: /programs/placeholder as binary, "
+                            "no disassembly, 10mhz speed, no tests.]"               );
     else
     {
-        // Try to open file to see if it exists
-        const FILE *file = fopen(argv[1], "r");
-        if (file == NULL)
+        int arg_start = 1; // ugly but necessary
+
+        // First argument MIGHT be a file path
+        if (argv[1][0] != '-')
         {
-            fprintf(stderr, "\nError opening file %s", argv[1]);
-            return 1;
+            // Try to open file to see if it exists
+            const FILE *file = fopen(argv[1], "r");
+            if (file == NULL)
+            {
+                fprintf(stderr, "\nError opening file %s", argv[1]);
+                return 1;
+            }
+            arg_start = 2;
+            printf("\nI've found %s!", argv[1]);
         }
-        for (int i = 2; i < argc; i++)
+
+        // First argument isn't a file path
+        for (int i = arg_start; i < argc; i++)
         {
             // Set emulator flags based on argv
             if ( strcmp(argv[i], "-d") == 0 )
@@ -56,17 +59,16 @@ int main(int argc, char * argv[])
             else if ( strcmp(argv[i], "-t") == 0 )
                 emu_flags.test = true;
             else if ( strncmp(argv[i], "-s", 2) == 0 )
-                emu_flags.speed = (byte) argv[i][2]; // Hopefully it will take -s[INT] from flag.
+                emu_flags.speed = argv[i][2];
             else if ( strcmp(argv[i], "-h") == 0 )
                 printf(help);
+            else
+                printf("\n%s isn't a valid flag!\n%s", argv[i], help);
         }
     }
 
-    // Testing (remove later)
-    printf("\nNo errors! I'm running %s", argv[1]);
-
     // so shit won't close
-    while (getchar() != '\n');
-    clear_terminal();
+    printf("\n%i %i %i %c", emu_flags.disassemble, emu_flags.assemble, emu_flags.test, emu_flags.speed);
+    wait_for_enter();
     return 0;
 }
