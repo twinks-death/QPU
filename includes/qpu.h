@@ -75,6 +75,7 @@ Halt	            1111 1111
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <unistd.h>
 
 
 // Memory map:
@@ -109,8 +110,8 @@ struct {
     bool assemble;
     bool disassemble;
     bool test;
-    char speed;
-} emu_flags;
+    byte speed;
+} emu_flags = { false, false, false, 2};
 
 
 #endif //QPU_LIB_H

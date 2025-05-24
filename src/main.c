@@ -27,45 +27,12 @@ const char* help = "\nFormat: qpu [asm/bin file location] [-d] [-t] [-s] [-h]"
 int main(int argc, char * argv[])
 {
     // Handle arguments
-    if (argc == 1)
-        printf( "\nNo arguments specified! The cpu will run under default settings!"
-
-                "\n[The default setting are: /programs/placeholder as binary, "
-                            "no disassembly, 10mhz speed, no tests.]"               );
-    else
+    if (argc != 1)
     {
-        int arg_start = 1; // ugly but necessary
 
-        // First argument MIGHT be a file path
-        if (argv[1][0] != '-')
-        {
-            // Try to open file to see if it exists
-            const FILE *file = fopen(argv[1], "r");
-            if (file == NULL)
-            {
-                fprintf(stderr, "\nError opening file %s", argv[1]);
-                return 1;
-            }
-            arg_start = 2;
-            printf("\nI've found %s!", argv[1]);
-        }
-
-        // First argument isn't a file path
-        for (int i = arg_start; i < argc; i++)
-        {
-            // Set emulator flags based on argv
-            if ( strcmp(argv[i], "-d") == 0 )
-                emu_flags.disassemble = true;
-            else if ( strcmp(argv[i], "-t") == 0 )
-                emu_flags.test = true;
-            else if ( strncmp(argv[i], "-s", 2) == 0 )
-                emu_flags.speed = argv[i][2];
-            else if ( strcmp(argv[i], "-h") == 0 )
-                printf(help);
-            else
-                printf("\n%s isn't a valid flag!\n%s", argv[i], help);
-        }
     }
+
+
 
     // so shit won't close
     printf("\n%i %i %i %c", emu_flags.disassemble, emu_flags.assemble, emu_flags.test, emu_flags.speed);

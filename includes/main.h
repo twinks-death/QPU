@@ -16,4 +16,7 @@ void wait_for_enter(void)
     #endif
 }
 
+int opt;
+int arg_start = 1;
+
 #endif //MAIN_H
