@@ -102,8 +102,8 @@ typedef uint16_t word;
 
 // Addressable memory
 typedef struct {
-    byte mem[ADDRESS_SPACE];
-} MEM;
+    byte memory[ADDRESS_SPACE];
+} MEMORY;
 
 // Emulator flags
 struct {
