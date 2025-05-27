@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.31)
-project(qpu C)
+project(qpu8_emu C)
 
 set(CMAKE_C_STANDARD 23)
 
@@ -13,10 +13,10 @@ include_directories(includes/SDL3/include)
 # Link directories where SDL static libs are located
 link_directories(${SDL3_LIBRARIES})
 
-add_executable(qpu includes/qpu.h
-        src/main.c)
+add_executable(qpu8_emu includes/qpu8.h
+        src/emu.c)
 
-target_compile_options(qpu PRIVATE
+target_compile_options(qpu8_emu PRIVATE
         -O3
         -Werror
         -Wall
@@ -26,7 +26,7 @@ target_compile_options(qpu PRIVATE
 )
 
 # Link SDL3 static libraries
-target_link_libraries(qpu PRIVATE
+target_link_libraries(qpu8_emu PRIVATE
     ${SDL3_LIBRARIES}/libSDL3.a
     ${SDL3_LIBRARIES}/libSDL3_test.a
     # Additional system libraries required by SDL

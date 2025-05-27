@@ -105,13 +105,4 @@ typedef struct {
     byte memory[ADDRESS_SPACE];
 } MEMORY;
 
-// Emulator flags
-struct {
-    bool assemble;
-    bool disassemble;
-    bool test;
-    byte speed;
-} emu_flags = { false, false, false, 2};
-
-
 #endif //QPU_LIB_H

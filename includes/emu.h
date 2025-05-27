@@ -5,19 +5,12 @@
 
 
 // Help string
-const char* help = "\nFormat: qpu [-d] [-t] [-s] [-h] [asm/bin file location]"
+const char* help = "\nFormat: qpu [-d] [-s] [-h] [asm/bin file location]"
                    "\n    [The default settings are:"
-                          "no disassembly, 10mhz speed, no tests.]"
+                          "no disassembly, 10mhz speed]"
                    "\nFlags: "
                    "\n-d - disassemble"
                    "\n    [creates a copy of the binary loaded with '_disasm' postfix in /asm]"
-                   "\n-t - test"
-                   "\n    [ignores all binaries, .s and runs specified tests to make sure"
-                   "\n     that cpu actually works. If expected result (e.g. a value stored"
-                   "\n     in a register) doesn't match actual result, test is marked as 'failed',"
-                   "\n     then asks if user wants to use stepped mode and shows expected result"
-                   "\n     and actual result for each cycle. Cpu also runs at full speed, that the"
-                   "\n     host pc can handle. (ignores -s flag and specified speed)"
                    "\n-s - speed selection"
                    "\n    [-s0 - stepped,"
                    "\n     -s1 - 1mhz,"
@@ -41,12 +34,23 @@ clear_terminal( void )
     #endif
 }
 
+// Emulator flags
+typedef struct {
+    bool assemble;
+    bool disassemble;
+    bool test;
+    byte speed;
+} emu_flags_t;
+
+emu_flags_t emu_flags = { false, false, false, 2 };
+
 // Parses strings from *argv[] and sets emu_flags based on them
 // Modifies: struct emu_flags
 // argv[optint] holds the valid file path after execution of function
-void
+emu_flags_t
 parse_flags( int argc,  char **argv )
 {
+
     // Parsing flags...
     int option;
     while ((option = getopt(argc,  argv, "dts:h")) != -1)
@@ -116,8 +120,20 @@ parse_flags( int argc,  char **argv )
         printf("\nNo bin or asm file provided\n"); exit(1);
     }
 
-    // If we reached this, then its successful.
-    printf("\nFound %s!\n", argv[optind]);
+    // If the only arguments are executable name and file path - no flags specified
+    if ( argc == 2 )
+        printf ("\nNo flags specified! The emulator will run under default settings:"
+                "\n[No disassembly, 10mhz speed]");
+    else
+        printf("\nFound %s!\n", argv[optind]); // Success!
+    return emu_flags; // Returns the entire struct for assembler/disassembler.
+}
+
+void
+check_flags(emu_flags_t)
+{
+    printf("\nDisassemble: %i\nAssemble: %i\nSpeed: %i",
+            emu_flags.disassemble, emu_flags.assemble, emu_flags.speed );
 }
 
 #endif //MAIN_H
