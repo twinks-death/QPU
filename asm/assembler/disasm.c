@@ -1,7 +1,6 @@
 #include "asm.h"
-#include "lexer.c"
 
-int assemble( char *input_file )
+int disassemble( char *input_file )
 {
     printf("\nI'm gonna do sumn with %s", input_file);
     return 0;

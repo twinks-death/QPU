@@ -1,8 +1,5 @@
-// Utilities for main.c
-
-#ifndef MAIN_H
-#define MAIN_H
-
+#ifndef EMU_H
+#define EMU_H
 
 // Help string
 const char* help = "\nFormat: qpu [-d] [-s] [-h] [asm/bin file location]"
@@ -20,6 +17,18 @@ const char* help = "\nFormat: qpu [-d] [-s] [-h] [asm/bin file location]"
                    "\n-h - help"
                    "\n    [ignores all other flags and prints allat]\n";
 
+// Types
+typedef uint8_t byte;
+typedef uint16_t word;
+
+// Emulator flags
+typedef struct {
+    bool assemble;
+    bool disassemble;
+    bool test;
+    byte speed;
+    char *input_file;
+} emu_flags_t;
 
 // Clears the terminal
 // If Windows - uses system cls,
@@ -34,34 +43,23 @@ clear_terminal( void )
     #endif
 }
 
-// Emulator flags
-typedef struct {
-    bool assemble;
-    bool disassemble;
-    bool test;
-    byte speed;
-} emu_flags_t;
-
-emu_flags_t emu_flags = { false, false, false, 2 };
-
 // Parses strings from *argv[] and sets emu_flags based on them
-// Modifies: struct emu_flags
-// argv[optint] holds the valid file path after execution of function
-emu_flags_t
-parse_flags( int argc,  char **argv )
+// Modifies: struct emu_flags ( declared in main() )
+void
+parse_flags (int argc, char ** argv, emu_flags_t * emu_flags)
 {
+    int option;
 
     // Parsing flags...
-    int option;
     while ((option = getopt(argc,  argv, "dts:h")) != -1)
     {
         switch (option)
         {
             // Disassemble
-            case 'd': emu_flags.disassemble = 1; break;
+            case 'd': emu_flags->disassemble = 1; break;
 
             // Run tests
-            case 't': emu_flags.test = 1; break;
+            case 't': emu_flags->test = 1; break;
 
             // Speed selection
             case 's':
@@ -71,7 +69,7 @@ parse_flags( int argc,  char **argv )
                     fprintf(stderr, "Invalid speed: '%s'\n", optarg);
                     exit(1);
                 }
-                emu_flags.speed = val; break;
+                emu_flags->speed = val; break;
 
             // Print help string
             case 'h': printf(help); exit(0);
@@ -82,7 +80,7 @@ parse_flags( int argc,  char **argv )
 
             // Mystery
             default:
-                printf("what happened here?"); break;
+                assert(0 && "parse flags went wrong!"); // Mystery
         }
     }
 
@@ -100,7 +98,7 @@ parse_flags( int argc,  char **argv )
         // If ends with .s, enable assembler
         if (strcasecmp(argv[optind] + strlen(argv[optind]) - strlen(".s"), ".s") == 0)
         {
-            emu_flags.assemble = 1;
+            emu_flags->assemble = 1;
         }
         // If ends with .bin, do nothing
         else if  (strcasecmp(argv[optind] + strlen(argv[optind]) - strlen(".bin"), ".bin") == 0)
@@ -126,14 +124,8 @@ parse_flags( int argc,  char **argv )
                 "\n[No disassembly, 10mhz speed]");
     else
         printf("\nFound %s!\n", argv[optind]); // Success!
-    return emu_flags; // Returns the entire struct for assembler/disassembler.
+
+    emu_flags->input_file = argv[optind];
 }
 
-void
-check_flags(emu_flags_t)
-{
-    printf("\nDisassemble: %i\nAssemble: %i\nSpeed: %i",
-            emu_flags.disassemble, emu_flags.assemble, emu_flags.speed );
-}
-
-#endif //MAIN_H
+#endif //EMU_H
