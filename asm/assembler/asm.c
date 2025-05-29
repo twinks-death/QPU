@@ -1,11 +1,11 @@
 #include "asm.h"
 #include "lexer.c"
 
-assemble_result_t assemble( char* input_file )
+assembled_result_t assemble( char* input_file )
 {
     printf("\nI'm gonna do sumn with %s", input_file);
 
-    // Open the file
+    // Open the file and check if it exists
     FILE* file = fopen(input_file, "r");
     if (!file) {
         perror("Error opening file");
@@ -26,5 +26,7 @@ assemble_result_t assemble( char* input_file )
     }
 
     // TODO: remove later
+
+    free(buffer);
     return {nullptr,0};
 }

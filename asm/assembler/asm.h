@@ -5,6 +5,6 @@
 typedef struct {
     byte* data;
     size_t size;
-} assemble_result_t;
+} assembled_result_t;
 
 #endif //ASM_H
