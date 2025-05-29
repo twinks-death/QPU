@@ -27,7 +27,7 @@ typedef struct {
     bool disassemble;
     bool test;
     byte speed;
-    char *input_file;
+    char* input_file;
 } emu_flags_t;
 
 // Clears the terminal
@@ -46,7 +46,7 @@ clear_terminal( void )
 // Parses strings from *argv[] and sets emu_flags based on them
 // Modifies: struct emu_flags ( declared in main() )
 void
-parse_flags (int argc, char ** argv, emu_flags_t * emu_flags)
+parse_flags (int argc, char** argv, emu_flags_t* emu_flags)
 {
     int option;
 
@@ -63,7 +63,7 @@ parse_flags (int argc, char ** argv, emu_flags_t * emu_flags)
 
             // Speed selection
             case 's':
-                char *end;
+                char* end;
                 byte val = strtol(optarg, &end, 10);
                 if (*end || val < 0 || val > 4) {
                     fprintf(stderr, "Invalid speed: '%s'\n", optarg);
@@ -87,7 +87,7 @@ parse_flags (int argc, char ** argv, emu_flags_t * emu_flags)
     // If there's another argument after flags
     if (optind < argc) {
         // Check if it's a valid file path
-        FILE *file = fopen(argv[optind], "r");
+        FILE* file = fopen(argv[optind], "r");
         if (!file) {
             perror(argv[optind]);
             exit(1); // It's not!

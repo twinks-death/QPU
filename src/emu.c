@@ -13,7 +13,7 @@
 #include "../asm/assembler/disasm.c"
 #include "qpu8.c"
 
-int main( int argc, char *argv[] )
+int main( int argc, char* argv[] )
 {
     // Default flags - no assembly, no disassembly, no tests, 10mhz clock speed, no file input (nullptr)
     emu_flags_t emu_flags = { false, false, false, 2, nullptr };

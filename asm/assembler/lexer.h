@@ -41,28 +41,39 @@ typedef enum {
     TOK_CHAR,               // 'a'
     TOK_STRING,             // "hi"
     TOK_INTEGER,            // 0x, 0d, or 0b
-    TOK_IDENTIFIER          // Name of variable or label
+    TOK_IDENTIFIER,         // Name of variable or label
+    TOK_INVALID             // Unkown token
 } token_t;
 
+// Simple line:col matrix
 typedef struct {
     size_t line;
     size_t col;
 } location_t;
 
+// Info per token
 typedef struct {
-    token_t type;           // The type of the token
-    char *val;              // The value of the token
-    location_t location;    // The location of the token
+    token_t type;               // The type of the token
+    char* string_value;         // The value of token if it's a string
+    int int_value;              // The value of token if it's a integer
+    size_t len;                 // Length of string value provided
+    location_t location;        // The location of the token
 } token_data_t;
 
+// Lexer instance structure
 typedef struct {
-    char *start_tok;
-    char *cur_tok;
-    token_data_t *tokens;
-    size_t token_count;
-    size_t capacity;
-    size_t line_number;
-    char *line_start;
+    char* input;                // Input buffer, read from file path
+    size_t input_size;          // Input size in bytes
+
+    token_data_t* tokens;       // Array of tokens
+    size_t token_count;         // Total amount of tokens
+    size_t tokens_capacity;     // Bytes allocated to tokens
+
+    size_t line_number;         // Current line number
+    size_t beginning_of_line;   // Collumn = cursor - beginning of line
+    size_t cursor;              // Cursor position
 } lexer_t;
+
+
 
 #endif //LEXER_H
