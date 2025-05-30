@@ -33,7 +33,7 @@ typedef struct {
 // Clears the terminal
 // If Windows - uses system cls,
 // else       - uses system clear
-void
+static inline void
 clear_terminal( void )
 {
     #ifdef _WIN32
@@ -86,9 +86,10 @@ parse_flags (int argc, char** argv, emu_flags_t* emu_flags)
 
     // If there's another argument after flags
     if (optind < argc) {
-        // Check if it's a valid file path
-        FILE* file = fopen(argv[optind], "r");
-        if (!file) {
+        // Open the file and check if it exists
+        FILE * file = fopen(argv[optind], "r");
+        if (!file)
+        {
             perror(argv[optind]);
             exit(1); // It's not!
         }

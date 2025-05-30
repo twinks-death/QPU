@@ -4,25 +4,47 @@ project(qpu8_emu C)
 set(CMAKE_C_STANDARD 23)
 
 # Add SDL3 paths
-set(SDL3_DIR "${CMAKE_CURRENT_SOURCE_DIR}/includes/SDL3")
+set(SDL3_DIR "${CMAKE_CURRENT_SOURCE_DIR}/include/SDL3")
 set(SDL3_LIBRARIES "${SDL3_DIR}/lib")
 
 # Add SDL include directory
-include_directories(includes/SDL3/include)
+include_directories(include/SDL3/include)
 
 # Link directories where SDL static libs are located
 link_directories(${SDL3_LIBRARIES})
 
-add_executable(qpu8_emu includes/qpu8.h
+add_executable(qpu8_emu include/qpu8.h
         src/emu.c)
 
 target_compile_options(qpu8_emu PRIVATE
         -O3
-        -Werror
         -Wall
+        -Wextra
         -Wpedantic
-        -static
-        -v
+        -Werror
+        -Wshadow
+        -Wformat=2
+        -Wundef
+        -Wconversion
+        -Wuninitialized
+        -Wfloat-equal
+        -Wlogical-op
+        -Wshift-overflow=2
+        -Wduplicated-cond
+        -Wduplicated-branches
+        -Wnull-dereference
+        -Wdouble-promotion
+        -Wmisleading-indentation
+        -Wcast-qual
+        -Wcast-align
+        -Wold-style-cast
+        -Woverloaded-virtual
+        -Wnon-virtual-dtor
+        -Wuseless-cast
+        -Wsuggest-override
+        -Wsuggest-final-types
+        -Wsuggest-final-methods
+        -Wzero-as-null-pointer-constant
 )
 
 # Link SDL3 static libraries

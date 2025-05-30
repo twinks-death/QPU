@@ -1,4 +1,4 @@
-#include "asm.h"
+#include "../include/asm.h"
 
 int disassemble( char *input_file )
 {

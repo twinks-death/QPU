@@ -2,15 +2,15 @@
 #include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <stddef.h>
 #include <string.h>
 #include <unistd.h>
 #include <assert.h>
 
 // My own includes
-#include "../includes/emu.h" // Always first! Includes typedefs for other dependencies
-#include "../asm/assembler/asm.c"
-#include "../asm/assembler/disasm.c"
+#include "../include/emu.h" // Always first! Includes typedefs for other dependencies
+#include "../asm/src/asm.c"
+#include "../asm/src/lexer.c"
+#include "../asm/src/disasm.c"
 #include "qpu8.c"
 
 int main( int argc, char* argv[] )
