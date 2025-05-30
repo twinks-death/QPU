@@ -4,6 +4,10 @@
 // Header kindly adapted from https://github.com/wzid/phi/blob/main/include/lexer.h
 // Written by wzid, or Brain Tickle on YT.
 
+// Standard library
+#include <stddef.h>
+
+
 typedef enum {
     // Opcode - Operands
     TOK_MNEMONIC = 0,
@@ -54,7 +58,7 @@ typedef struct {
 typedef struct {
     token_t type;               // The type of the token
     char* string_value;         // The value of token if it's a string
-    int int_value;              // The value of token if it's a integer
+    int int_value;              // The value of token if it's an integer
 } token_data_t;
 
 // Lexer instance structure
@@ -69,6 +73,7 @@ typedef struct {
     size_t index;               // Current index of lexer
 } lexer_t;
 
-
+// In lexer.c
+void lexer_init (lexer_t * lexer);
 
 #endif //LEXER_H

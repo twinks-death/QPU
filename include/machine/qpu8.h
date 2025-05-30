@@ -1,40 +1,35 @@
 #ifndef QPU8_H
 #define QPU8_H
 
+// Memory map:
+// 0x0000 - 0x3FFF: Not banked (Low ram)
+// 0x4000 - 0x7FFF: Banked (High ram)
+// 0x8000 - 0xDFFF: Kernel/OS (Ram, privileged access)
+// 0xE000 - 0xFFFF: BIOS (Rom, privileged access + write protected)
+
+// Project headers
+#include "emulator/emu.h"
+
+
+// Definitions
+#define ADDRESS_SPACE   0x10000
+#define REGISTER_COUNT  8
+#define BIOS_START      0xE000
+
+#define STACK_SIZE      0x1000  // 4  KB
+#define LOW_RAM_SIZE    0x4000  // 16 KB
+#define HIGH_RAM_SIZE   0x4000  // 16 KB
+#define KERNEL_RAM_SIZE 0x6000  // 24 KB
+#define BIOS_SIZE       0x2000  // 8  KB
+
+// Addressable memory
+typedef struct {
+    byte memory[ADDRESS_SPACE];
+} MEMORY;
+
+
+
 /*
-QPU Rev1.2
-
-8-bits, 16-bits address
-
-===================================================================================================
-
-Registers:  Z (R0)  -  Always 0, writes ignored
-            A (R1)  -  GP, Accumulator
-            B (R2)  -  GP, Base (for indexing)
-            C (R3)  -  GP, Counter
-            D (R4)  -  GP, For IO
-            F (R5)  -  GP, Flags
-            L (R6)  -  GP, Temporary, Low 8 bits of an address / low 8 bits of mul product
-            H (R7)  -  GP, Temporary, High 8 bits of an address / high 8 bits of mul product
-
-Flags:      7: Privelege (0/1 - user/supervisor)
-            6: Interrupts (0/1 - disabled/enabled)
-            5: Overflow
-            4: Sign
-            3: Auxiliary carry
-            2: Parity
-            1: Carry
-            0: Zero
-
----------------------------------------------------------------------------------------------------
-
-AUX Regs:   SP      -  Stack pointer (10 bits)
-            BP      -  Base pointer (10 bits)
-            MASK    -  Interrupt mask (8 bits)
-            PC      -  Program counter (16 bits)
-
-===================================================================================================
-
 Mnemonic	        Byte 1	    Byte 2	    Byte 3	    Pseudocode
 STORE Rs, addr	    00000 SSS	AAAA AAAA	AAAA AAAA	mem[addr] = Rs
 STORE Rs, [HL]	    00001 SSS			                mem[HL] = Rs
@@ -91,28 +86,5 @@ DIVI Rs, Imm8	    11110 SSS	IIII IIII		        Hi = Rs / imm8; Lo = Rs % imm8
 IDIVI Rs, Imm8	    11111 SSS	IIII IIII		        Hi = Rs / imm8; Lo = Rs % imm8 // signed
 Halt	            11111 111			                else if (SSS == 7) quit()
 */
-
-// Memory map:
-// 0x0000 - 0x3FFF: Not banked (Low ram)
-// 0x4000 - 0x7FFF: Banked (High ram)
-// 0x8000 - 0xDFFF: Kernel/OS (Ram, privileged access)
-// 0xE000 - 0xFFFF: BIOS (Rom, privileged access + write protected)
-
-// Definitions
-// TODO: implement ts later
-#define ADDRESS_SPACE   0x10000
-#define REGISTER_COUNT  8
-#define BIOS_START      0xE000
-
-#define STACK_SIZE      0x1000  // 4  KB
-#define LOW_RAM_SIZE    0x4000  // 16 KB
-#define HIGH_RAM_SIZE   0x4000  // 16 KB
-#define KERNEL_RAM_SIZE 0x6000  // 24 KB
-#define BIOS_SIZE       0x2000  // 8  KB
-
-// Addressable memory
-typedef struct {
-    byte memory[ADDRESS_SPACE];
-} MEMORY;
 
 #endif //QPU8_H

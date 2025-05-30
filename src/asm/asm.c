@@ -1,5 +1,5 @@
-#include "../include/asm.h"
-#include "../include/lexer.h"
+#include "assembler/asm.h"
+#include "assembler/lexer.h"
 
 assembled_result_t assemble( const char* input_file )
 {
