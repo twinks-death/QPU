@@ -57,8 +57,8 @@ typedef struct {
 // Info per token
 typedef struct {
     token_t type;               // The type of the token
-    char* string_value;         // The value of token if it's a string
-    int int_value;              // The value of token if it's an integer
+    char*   string_value;       // The value of token if it's a string
+    int     int_value;          // The value of token if it's an integer
 } token_data_t;
 
 // Lexer instance structure
@@ -70,10 +70,10 @@ typedef struct {
     size_t tokens_capacity;     // Bytes allocated to tokens
 
     location_t location;        // Location of current token being tokenized
-    size_t index;               // Current index of lexer
+    size_t     index;           // Current index of lexer
 } lexer_t;
 
 // In lexer.c
-void lexer_init (lexer_t * lexer);
+void lexer_init (lexer_t* lexer);
 
 #endif //LEXER_H

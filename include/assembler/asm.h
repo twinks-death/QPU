@@ -10,7 +10,7 @@
 
 // Format for the binary produced by assembler
 typedef struct {
-    byte* data;
+    byte*  data;
     size_t size;
 } assembled_result_t;
 

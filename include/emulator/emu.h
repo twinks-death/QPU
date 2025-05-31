@@ -3,9 +3,9 @@
 
 // Standard library
 #include <assert.h>
+#include <stdbool.h>
 #include <stdint.h>
 #include <unistd.h>
-
 
 // Help string
 const char* help = "\nFormat: qpu [-d] [-s] [-h] [asm/bin file location]"
@@ -29,10 +29,10 @@ typedef uint16_t word;
 
 // Emulator flags
 typedef struct {
-    bool assemble;
-    bool disassemble;
-    bool test;
-    byte speed;
+    bool  assemble;
+    bool  disassemble;
+    bool  test;
+    byte  speed;
     char* input_file;
 } emu_flags_t;
 
