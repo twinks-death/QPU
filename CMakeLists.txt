@@ -35,24 +35,24 @@ target_compile_options(qpu8_emu PRIVATE
         -Wall
         -Wextra
         -Wpedantic
-        -Werror
-        -Wshadow
-        -Wformat=2
-        -Wundef
-        -Wconversion
-        -Wuninitialized
-        -Wfloat-equal
-        -Wlogical-op
-        -Wshift-overflow=2
-        -Wduplicated-cond
-        -Wduplicated-branches
-        -Wnull-dereference
-        -Wdouble-promotion
-        -Wmisleading-indentation
-        -Wcast-qual
-        -Wcast-align
-        -Wsuggest-final-types
-        -Wsuggest-final-methods
+        #-Werror
+        #-Wshadow
+        #-Wformat=2
+        #-Wundef
+        #-Wconversion
+        #-Wuninitialized
+        #-Wfloat-equal
+        #-Wlogical-op
+        #-Wshift-overflow=2
+        #-Wduplicated-cond
+        #-Wduplicated-branches
+        #-Wnull-dereference
+        #-Wdouble-promotion
+        #-Wmisleading-indentation
+        #-Wcast-qual
+        #-Wcast-align
+        #-Wsuggest-final-types
+        #-Wsuggest-final-methods
         -v
 )
 

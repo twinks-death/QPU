@@ -6,6 +6,10 @@
 
 // Standard library
 #include <stddef.h>
+#include <stdio.h>
+#include <stdlib.h>
+
+#include "emulator/emu.h"
 
 
 typedef enum {
@@ -14,35 +18,35 @@ typedef enum {
     TOK_REGISTER,
 
     // Bitwise operations
-    TOK_NOT,                // !
-    TOK_AND,                // &
-    TOK_OR,                 // |
-    TOK_XOR,                // ^
+    TOK_NOT,        // !
+    TOK_AND,        // &
+    TOK_OR,         // |
+    TOK_XOR,        // ^
 
     // Separators, or punctuation
-    TOK_LPAREN,             // (
-    TOK_RPAREN,             // )
-    TOK_LBRACKET,           // [
-    TOK_RBRACKET,           // ]
-    TOK_COMMA,              // ,
+    TOK_LPAREN,     // (
+    TOK_RPAREN,     // )
+    TOK_LBRACKET,   // [
+    TOK_RBRACKET,   // ]
+    TOK_COMMA,      // ,
 
     // Operators
-    TOK_PLUS,               // +
-    TOK_MINUS,              // -
-    TOK_STAR,               // *
-    TOK_SLASH,              // /
-    TOK_MOD,                // %
-    TOK_POINT,              // >
-    TOK_LEFTSHIFT,          // <<
-    TOK_RIGHTSHIFT,         // >>
+    TOK_PLUS,       // +
+    TOK_MINUS,      // -
+    TOK_STAR,       // *
+    TOK_SLASH,      // /
+    TOK_MOD,        // %
+    TOK_POINT,      // >
+    TOK_LEFTSHIFT,  // <<
+    TOK_RIGHTSHIFT, // >>
 
     // Special
-    TOK_DIRECTIVE,          // .org .text .data .define .include
-    TOK_TYPE,               // db, dw, dd
-    TOK_CHAR,               // 'a'
-    TOK_STRING,             // "hi"
-    TOK_INTEGER,            // 0x, 0d, or 0b
-    TOK_IDENTIFIER,          // Name of variable or label
+    TOK_DIRECTIVE,  // .org .text .data .define .include
+    TOK_TYPE,       // db, dw, dd
+    TOK_CHAR,       // 'a'
+    TOK_STRING,     // "hi"
+    TOK_INTEGER,    // 0x, 0d, or 0b
+    TOK_IDENTIFIER, // Name of variable or label
 
     // End of file
     TOK_EOF
@@ -56,24 +60,26 @@ typedef struct {
 
 // Info per token
 typedef struct {
-    token_t type;               // The type of the token
-    char*   string_value;       // The value of token if it's a string
-    int     int_value;          // The value of token if it's an integer
+    token_t type;
+    char* value;
 } token_data_t;
+
+typedef struct {
+    token_data_t* tokens;   // Array of tokens
+    size_t tokens_capacity; // Bytes allocated to tokens
+} tokens_arr_t;
 
 // Lexer instance structure
 typedef struct {
-    char*  input;               // Input buffer, read from file path
-    size_t input_size;          // Input size in bytes
-
-    token_data_t* tokens;       // Array of tokens
-    size_t tokens_capacity;     // Bytes allocated to tokens
-
-    location_t location;        // Location of current token being tokenized
-    size_t     index;           // Current index of lexer
+    size_t     input_size;  // Input size in bytes
+    location_t location;    // Location of current token being tokenized
+    size_t     index;       // Current index of lexer
 } lexer_t;
 
 // In lexer.c
-void lexer_init (lexer_t* lexer);
+lexer_t lexer_init(size_t input_size);
+void lexer_advance(lexer_t* lexer);
+const char* token_id(token_t token);
+void print_token(token_data_t token);
 
 #endif //LEXER_H

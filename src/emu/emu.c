@@ -3,13 +3,36 @@
 #include "assembler/asm.h"
 #include "machine/qpu8.h"
 
+// Help string
+const char * help = "\nFormat: qpu [-d] [-s] [-t] [-h] [asm/bin file location]"
+    "\n    [The default settings are:"
+    "no disassembly, 10mhz speed]"
+    "\nFlags: "
+    "\n-d - disassemble"
+    "\n    [creates a copy of the binary loaded with '_disasm' postfix in /asm]"
+    "\n-s - speed selection"
+    "\n    [-s0 - stepped,"
+    "\n     -s1 - 1mhz,"
+    "\n     -s2 - 10mhz, (default)"
+    "\n     -s3 - 100mhz,"
+    "\n     -s4 - no restrictions]"
+    "\n-t - test"
+    "\n    [ignores all binaries, .s and runs specified tests to make sure"
+    "\n     that cpu actually works. If expected result (e.g. a value stored"
+    "\n     in a register) doesn't match actual result, test is marked as 'failed',"
+    "\n     then asks if user wants to use stepped mode and shows expected result"
+    "\n     and actual result for each cycle. Cpu also runs at full speed, that the"
+    "\n     host pc can handle. (ignores -s flag and specified speed) ]"
+    "\n-h - help"
+    "\n    [ignores all other flags and prints allat]\n";
+
 // Takes in arguments from *argv[] and sets emu_flags based on them:
 // disassemble if -d flag present
 // assemble    if input_file is .s
 // unit tests  if -t flag present
 // usage       if -h flag present
 // speed (mhz) if -s flag present, AND has a number from 0 to 4 inclusive after it
-void parse_flags (int argc, char ** argv, emu_flags_t * emu_flags)
+void parse_flags ( int argc, char** argv, emu_flags_t* emu_flags )
 {
     int option;
     while ((option = getopt(argc, argv, "dts:h")) != -1)
@@ -22,7 +45,7 @@ void parse_flags (int argc, char ** argv, emu_flags_t * emu_flags)
                 break;
             case 's': char * end;
                 byte val = strtol(optarg, &end, 10);
-                if (*end || val < 0 || val > 4)
+                if (*end || val > 4)
                 {
                     fprintf(stderr, "Invalid speed: '%s'\n", optarg);
                     exit(1);
@@ -34,7 +57,8 @@ void parse_flags (int argc, char ** argv, emu_flags_t * emu_flags)
             case '?': printf(help);
                 exit(1);
             default:
-                assert(0 && "parse flags went wrong!"); // Mystery
+                fprintf(stderr, "What happened here?: %s:%d", __FILE__, __LINE__); // Mystery
+                exit(1);
         }
     }
 
@@ -68,7 +92,7 @@ void parse_flags (int argc, char ** argv, emu_flags_t * emu_flags)
     }
     else
     {
-        printf("\nNo bin or asm file provided\n");
+        fprintf(stderr, "\nNo bin or asm file provided\n");
         exit(1);
     }
 
@@ -83,7 +107,7 @@ void parse_flags (int argc, char ** argv, emu_flags_t * emu_flags)
 }
 
 
-int main (int argc, char * argv[])
+int main ( int argc, char* argv[] )
 {
     // Default flags - no assembly, no disassembly, no tests, 10mhz clock speed, no file input (nullptr)
     emu_flags_t emu_flags = {false, false, false, 2, nullptr};
@@ -95,7 +119,11 @@ int main (int argc, char * argv[])
     else if (emu_flags.disassemble)
         disassemble(emu_flags.input_file);
     else
-        assert(0 && "both assemble and dissasemble are false!"); // Mystery
+    {
+        fprintf(stderr, "What happened here?: %s:%d", __FILE__, __LINE__); // Mystery
+        exit(1);
+    }
+
 
     return 0;
 }
