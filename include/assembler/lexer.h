@@ -60,26 +60,24 @@ typedef struct {
 
 // Info per token
 typedef struct {
-    token_t type;
-    char* value;
+    token_t    type;
+    char*      value;
+    location_t location;
 } token_data_t;
-
-typedef struct {
-    token_data_t* tokens;   // Array of tokens
-    size_t tokens_capacity; // Bytes allocated to tokens
-} tokens_arr_t;
 
 // Lexer instance structure
 typedef struct {
-    size_t     input_size;  // Input size in bytes
-    location_t location;    // Location of current token being tokenized
-    size_t     index;       // Current index of lexer
+    const char* input;      // pointer to input buffer (declared in asm.c)
+    size_t      input_size; // Input size in bytes
+    location_t  location;   // Location of current token being tokenized
+    size_t      index;      // Current index of lexer
 } lexer_t;
 
 // In lexer.c
-lexer_t lexer_init(size_t input_size);
-void lexer_advance(lexer_t* lexer);
-const char* token_id(token_t token);
-void print_token(token_data_t token);
+lexer_t            lexer_init    (const char* input, size_t input_size);
+static void        lexer_advance (lexer_t* lexer);
+static const char* token_id      (token_t token);
+static void        print_token   (token_data_t token);
+static void        add_token     (lexer_t* lexer, token_data_t token);
 
 #endif //LEXER_H

@@ -25,7 +25,7 @@ assembled_result_t assemble(const char* input_file)
     fclose(file);
 
     // create lexer instance
-    lexer_t lexer = lexer_init(file_size);
+    lexer_t lexer = lexer_init(input_buffer, file_size);
 
     free(input_buffer);
     return (assembled_result_t){nullptr,0};
