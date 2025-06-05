@@ -79,11 +79,14 @@ typedef struct {
     size_t      index;      // Current index of lexer
 } lexer_t;
 
-// In lexer.c
-lexer_t             lexer_init    (const char* input, size_t input_size);
-static void         lexer_advance (lexer_t* lexer);
-static const char*  token_id      (token_t token);
-static void         print_token   (token_data_t token);
-static token_data_t add_token     (lexer_t* lexer);
+// PRIVATE
+static const char*  token_id              (token_t* t);
+static void         print_token           (token_data_t* t);
+static void         lexer_skip_whitespcae (lexer_t* l);
+static token_data_t add_token             (lexer_t* l);
+
+// PUBLIC
+lexer_t       lexer_init (const char* input, size_t input_size);
+token_array_t lexer      (lexer_t* lexer);
 
 #endif //LEXER_H

@@ -117,7 +117,6 @@ lexer (lexer_t* lexer)
         }
 
         tokens.token[tokens.count++] = new_token;
-        lexer_advance(lexer);
     }
 
     return tokens;
