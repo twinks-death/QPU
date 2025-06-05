@@ -67,8 +67,8 @@ typedef struct {
 
 typedef struct {
     token_data_t* token;
-    size_t count;
-    size_t capacity;
+    size_t        count;
+    size_t        capacity;
 } token_array_t;
 
 // Lexer instance structure
