@@ -14,25 +14,31 @@ lexer_t lexer_init (const char* input, size_t input_size)
 }
 
 static int
-is_newline(char c)
+is_newline (char c)
 {
     return (c == '\n' || c == '\r');
+}
+
+static void
+skip_whitespace (lexer_t* l)
+{
+    if ( is_newline(l->input[l->index]) ) {}
 }
 
 // Increment lexer index smartly, reset collumn & increment line num if new line
 // Pass: lexer instance
 static void
-lexer_advance (lexer_t* lexer)
+lexer_advance (lexer_t* l)
 {
-    if (lexer->index < lexer->input_size)
+    if (l->index < l->input_size)
     {
-        lexer->index += 1;
+        l->index += 1;
 
-        if (is_newline(lexer->input[lexer->index])) {
-            lexer->location.line += 1;
-            lexer->location.col = 1;
+        if (is_newline(l->input[l->index])) {
+            l->location.line += 1;
+            l->location.col = 1;
         } else {
-            lexer->location.col += 1;
+            l->location.col += 1;
         }
     }
 }
@@ -40,9 +46,9 @@ lexer_advance (lexer_t* lexer)
 // Pass: address to token
 // Return: type of token as a char*
 static const char*
-token_id (token_data_t* token)
+token_id (token_data_t* t)
 {
-    switch (token->type)
+    switch (t->type)
     {
         case TOK_MNEMONIC:   return "Mnemonic";
         case TOK_REGISTER:   return "Register";
@@ -82,20 +88,20 @@ token_id (token_data_t* token)
 // Pass:   token
 // Return: formatted
 static void
-print_token(token_data_t* token)
+print_token (token_data_t* t)
 {
-    const char* type = token_id(token);
-    printf("\n[%llu:%llu] - %s: ", token->location.line, token->location.col,type);
-    if (token->value != NULL)
-        printf("'%s'", token->value);
+    const char* type = token_id(t);
+    printf("\n[%llu:%llu] - %s: ", t->location.line, t->location.col,type);
+    if (t->value != NULL)
+        printf("'%s'", t->value);
 }
 
 static token_data_t
-add_token(lexer_t* lexer)
+add_token (lexer_t* l)
 {
     ;
 }
 
 token_array_t
-lexer(lexer_t lexer);
+lexer (lexer_t lexer);
 

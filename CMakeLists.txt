@@ -32,8 +32,8 @@ target_sources(qpu8_emu PRIVATE ${SRC_FILES})
 
 target_compile_options(qpu8_emu PRIVATE
         -O3
-        -Wall
-        -Wextra
+        #-Wall
+        #-Wextra
         -Wpedantic
         #-Werror
         #-Wshadow
