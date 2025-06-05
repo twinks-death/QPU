@@ -90,9 +90,12 @@ print_token(token_data_t* token)
         printf("'%s'", token->value);
 }
 
-static void
-add_token(lexer_t* lexer, token_data_t token)
+static token_data_t
+add_token(lexer_t* lexer)
 {
     ;
 }
+
+token_array_t
+lexer(lexer_t lexer);
 

@@ -65,6 +65,12 @@ typedef struct {
     location_t location;
 } token_data_t;
 
+typedef struct {
+    token_data_t* token;
+    size_t count;
+    size_t capacity;
+} token_array_t;
+
 // Lexer instance structure
 typedef struct {
     const char* input;      // pointer to input buffer (declared in asm.c)
@@ -74,10 +80,10 @@ typedef struct {
 } lexer_t;
 
 // In lexer.c
-lexer_t            lexer_init    (const char* input, size_t input_size);
-static void        lexer_advance (lexer_t* lexer);
-static const char* token_id      (token_t token);
-static void        print_token   (token_data_t token);
-static void        add_token     (lexer_t* lexer, token_data_t token);
+lexer_t             lexer_init    (const char* input, size_t input_size);
+static void         lexer_advance (lexer_t* lexer);
+static const char*  token_id      (token_t token);
+static void         print_token   (token_data_t token);
+static token_data_t add_token     (lexer_t* lexer);
 
 #endif //LEXER_H
