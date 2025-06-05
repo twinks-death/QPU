@@ -90,7 +90,14 @@ lexer_skip_whitespace (lexer_t* l)
 static token_data_t
 add_token (lexer_t* l)
 {
-    token_data_t token = {.location = l->location};
+    token_data_t token = {
+        .location = l->location,
+        .value = &l->input[l->index]
+    };
+
+    lexer_skip_whitespace(l);
+
+
     return token;
 }
 

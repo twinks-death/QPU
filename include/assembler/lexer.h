@@ -60,9 +60,9 @@ typedef struct {
 
 // Info per token
 typedef struct {
-    token_t    type;
-    char*      value;
-    location_t location;
+    token_t     type;
+    const char* value;
+    location_t  location;
 } token_data_t;
 
 typedef struct {
