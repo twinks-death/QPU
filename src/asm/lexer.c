@@ -50,7 +50,10 @@ print_token (token_data_t* t)
     const char* type = token_id(t);
     printf("\n[%llu:%llu] - %s: ", t->location.line, t->location.col, type);
     if (t->value != NULL)
-        printf("'%s'", t->value);
+        puts("'");
+        for (int i = 0; i < t->length; i++)
+            printf("%c", t->value[i]);
+        puts("'");
 }
 
 // Initialize all values inside of lexer struct, and return lexer_t for caller
@@ -87,16 +90,34 @@ lexer_skip_whitespace (lexer_t* l)
     }
 }
 
-static token_data_t
-add_token (lexer_t* l)
+static void
+add_token (token_data_t* dest, token_t type, const char* value, size_t length)
 {
-    token_data_t token = {
-        .location = l->location,
-        .value = &l->input[l->index]
-    };
+    dest->type   = type;
+    dest->value  = value;
+    dest->length = length;
+}
 
+// .value = &l->input[l->index]
+
+static token_data_t
+lexer_next (lexer_t* l)
+{
+    token_data_t token = {.location = l->location};
     lexer_skip_whitespace(l);
 
+
+    if (l->index >= l->input_size)          // out of chars
+        add_token(&token, TOK_EOF, NULL, 0);
+    else if ( l->input[l->index] == '.' )   // Directive
+    {
+        if ( isalnum(l->input[l->index]) || l->input[l->index] == '_')
+        {
+            size_t start = l->index;
+            while (!isspace(l->input[l->index])) { l->index++; }
+            add_token(&token, TOK_DIRECTIVE, &l->input[l->index], l->index - start);
+        }
+    }
 
     return token;
 }
@@ -107,9 +128,9 @@ lexer (lexer_t* lexer)
     token_array_t tokens =
     {.count = 0, .capacity = 256, .token = malloc(sizeof(token_data_t) * 256)};
 
-    while (tokens.token->type != TOK_EOF)
-    {
-        token_data_t new_token = add_token(lexer);
+     while (lexer->input[lexer->index] != '\0')
+     {
+        token_data_t new_token = lexer_next(lexer);
 
         // check if tokens is out of heap
         if (tokens.count >= tokens.capacity)
@@ -122,9 +143,9 @@ lexer (lexer_t* lexer)
                 exit(1);
             }
         }
-
+        print_token(&new_token);
         tokens.token[tokens.count++] = new_token;
-    }
+     }
 
     return tokens;
 }

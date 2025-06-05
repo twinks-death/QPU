@@ -5,6 +5,7 @@
 // Written by wzid, or Brain Tickle on YT.
 
 // Standard library
+#include <ctype.h>
 #include <stddef.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -62,6 +63,7 @@ typedef struct {
 typedef struct {
     token_t     type;
     const char* value;
+    size_t      length;
     location_t  location;
 } token_data_t;
 
@@ -83,7 +85,7 @@ typedef struct {
 static const char*  token_id              (token_t* t);
 static void         print_token           (token_data_t* t);
 static void         lexer_skip_whitespcae (lexer_t* l);
-static token_data_t add_token             (lexer_t* l);
+static token_data_t lexer_next            (lexer_t* l);
 
 // PUBLIC
 lexer_t       lexer_init (const char* input, size_t input_size);
