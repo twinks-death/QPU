@@ -1,7 +1,7 @@
 #include "assembler/asm.h"
 #include "assembler/lexer.h"
 
-assembled_result_t assemble(const char* input_file)
+void assemble(const char* input_file)
 {
     FILE* file = fopen(input_file, "r");
 
@@ -25,8 +25,12 @@ assembled_result_t assemble(const char* input_file)
     fclose(file);
 
     // create lexer instance
+    token_array_t tokens =
+    {.count = 0, .capacity = 256, .token = malloc(sizeof(token_data_t) * 256)};
     lexer_t lexer = lexer_init(input_buffer, file_size);
+    tokens = lex(&lexer, tokens);
 
     free(input_buffer);
-    return (assembled_result_t){nullptr,0};
+    free(lexer.input);
+    free(tokens.token);
 }

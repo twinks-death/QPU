@@ -16,7 +16,7 @@ typedef struct {
 
 
 // In asm.c
-assembled_result_t assemble(const char* input_file);
+void assemble(const char* input_file);
 
 // In disasm.c
 int disassemble(const char *input_file);

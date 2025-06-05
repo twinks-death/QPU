@@ -50,10 +50,11 @@ print_token (token_data_t* t)
     const char* type = token_id(t);
     printf("\n[%llu:%llu] - %s: ", t->location.line, t->location.col, type);
     if (t->value != NULL)
+    {
         puts("'");
-        for (int i = 0; i < t->length; i++)
-            printf("%c", t->value[i]);
+        for (int i = 0; i < t->length; i++) { printf("%c", t->value[i]); }
         puts("'");
+    }
 }
 
 // Initialize all values inside of lexer struct, and return lexer_t for caller
@@ -62,7 +63,7 @@ lexer_t lexer_init (const char* input, size_t input_size)
     lexer_t lexer;
     lexer.input      = input;
     lexer.input_size = input_size;
-    lexer.location   = (location_t){.line = 0, .col = 1};
+    lexer.location   = (location_t){.line = 1, .col = 1};
     lexer.index      = 0;
 
     return lexer;
@@ -95,6 +96,7 @@ add_token (token_data_t* dest, token_t type, const char* value, size_t length)
 {
     dest->type   = type;
     dest->value  = value;
+    printf("\n%s, %s", value, dest->value);
     dest->length = length;
 }
 
@@ -106,12 +108,13 @@ lexer_next (lexer_t* l)
     token_data_t token = {.location = l->location};
     lexer_skip_whitespace(l);
 
-
+    // l->input somehow dies when it gets into the else if, figure out later...
     if (l->index >= l->input_size)          // out of chars
         add_token(&token, TOK_EOF, NULL, 0);
     else if ( l->input[l->index] == '.' )   // Directive
     {
-        if ( isalnum(l->input[l->index]) || l->input[l->index] == '_')
+        printf("\n%s\n", l->input);
+        if (isalnum(l->input[l->index]) || l->input[l->index] == '_')
         {
             size_t start = l->index;
             while (!isspace(l->input[l->index])) { l->index++; }
@@ -123,15 +126,12 @@ lexer_next (lexer_t* l)
 }
 
 token_array_t
-lexer (lexer_t* lexer)
+lex (lexer_t* lexer, token_array_t tokens)
 {
-    token_array_t tokens =
-    {.count = 0, .capacity = 256, .token = malloc(sizeof(token_data_t) * 256)};
-
-     while (lexer->input[lexer->index] != '\0')
-     {
+    while (lexer->input[lexer->index] != '\0')
+    {
         token_data_t new_token = lexer_next(lexer);
-
+        printf("%p",new_token.value);
         // check if tokens is out of heap
         if (tokens.count >= tokens.capacity)
         {
@@ -145,7 +145,7 @@ lexer (lexer_t* lexer)
         }
         print_token(&new_token);
         tokens.token[tokens.count++] = new_token;
-     }
+    }
 
     return tokens;
 }
