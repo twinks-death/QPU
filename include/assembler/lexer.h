@@ -14,8 +14,11 @@
 
 
 typedef enum {
+    // End of file
+    TOK_EOF = 0,
+
     // Opcode - Operands
-    TOK_MNEMONIC = 0,
+    TOK_MNEMONIC,
     TOK_REGISTER,
 
     // Bitwise operations
@@ -47,12 +50,9 @@ typedef enum {
     TOK_CHAR,       // 'a'
     TOK_STRING,     // "hi"
     TOK_INTEGER,    // 0x, 0d, or 0b
-    TOK_IDENTIFIER, // Name of variable or label
+    TOK_IDENTIFIER  // Name of variable or label
 
-    // End of file
-    TOK_EOF
 } token_t;
-
 // Simple line:col matrix
 typedef struct {
     size_t line;
@@ -87,9 +87,11 @@ static void         print_token           (token_data_t* t);
 static void         lexer_skip_whitespcae (lexer_t* l);
 static void         add_token             (token_data_t* dest, token_t type, const char* value, size_t length);
 static token_data_t lexer_next            (lexer_t* l);
-
+static inline bool  is_symbol_start       (char x) { return isalpha(x) || x == '_'; }
+static inline bool  is_symbol             (char x) { return isalnum(x) || x == '_'; }
 // PUBLIC
 lexer_t lexer_init (const char* input, size_t input_size);
-token_array_t lex  (lexer_t* lexer, token_array_t tokens);
+
+token_array_t lex (lexer_t* lexer, token_array_t tokens);
 
 #endif //LEXER_H

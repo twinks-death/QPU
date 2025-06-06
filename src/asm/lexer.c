@@ -48,13 +48,11 @@ static void
 print_token (token_data_t* t)
 {
     const char* type = token_id(t);
-    printf("\n[%llu:%llu] - %s: ", t->location.line, t->location.col, type);
+    printf("\n[%llu:%llu] - ", t->location.line, t->location.col);
     if (t->value != NULL)
-    {
-        puts("'");
-        for (int i = 0; i < t->length; i++) { printf("%c", t->value[i]); }
-        puts("'");
-    }
+        printf("%s: %.*s", type, (int)t->length, t->value);
+    else
+        printf("%s", type);
 }
 
 // Initialize all values inside of lexer struct, and return lexer_t for caller
@@ -76,27 +74,28 @@ lexer_skip_whitespace (lexer_t* l)
 {
     while (l->index < l->input_size)
     {
-        char c = l->input[l->index++];
+        char c = l->input[l->index];
         if ( c == ' ' || c == '\t' || c == '\r' || c == '\n' ) {
+            l->index++;
             if (c == '\n' || c == '\r') {
                 l->location.line++;
                 l->location.col = 1;
             } else {
                 l->location.col++;
             }
-            l->index++;
         } else {
             break;
         }
     }
 }
 
+
+
 static void
 add_token (token_data_t* dest, token_t type, const char* value, size_t length)
 {
     dest->type   = type;
     dest->value  = value;
-    printf("\n%s, %s", value, dest->value);
     dest->length = length;
 }
 
@@ -105,33 +104,37 @@ add_token (token_data_t* dest, token_t type, const char* value, size_t length)
 static token_data_t
 lexer_next (lexer_t* l)
 {
-    token_data_t token = {.location = l->location};
     lexer_skip_whitespace(l);
+    token_data_t token = {
+        .length = 0,
+        .location = l->location
+    };
 
-    // l->input somehow dies when it gets into the else if, figure out later...
-    if (l->index >= l->input_size)          // out of chars
-        add_token(&token, TOK_EOF, NULL, 0);
-    else if ( l->input[l->index] == '.' )   // Directive
-    {
-        printf("\n%s\n", l->input);
-        if (isalnum(l->input[l->index]) || l->input[l->index] == '_')
-        {
+    // out of chars
+    if (l->index >= l->input_size) return token;
+    // Directive
+    if (l->input[l->index] == '.' ) {
+        if (is_symbol_start(l->input[++l->index]) ) {
             size_t start = l->index;
-            while (!isspace(l->input[l->index])) { l->index++; }
-            add_token(&token, TOK_DIRECTIVE, &l->input[l->index], l->index - start);
+            while ( l->index < l->input_size && is_symbol(l->input[l->index]) ) {
+                l->index++;
+                token.length++;
+            }
+            add_token(&token, TOK_DIRECTIVE, &l->input[start], token.length);
+            return token;
         }
     }
 
+    l->index++;
     return token;
 }
 
 token_array_t
 lex (lexer_t* lexer, token_array_t tokens)
 {
-    while (lexer->input[lexer->index] != '\0')
+    while (lexer->input[lexer->index] != '\0' || tokens.token[tokens.count].type != TOK_EOF)
     {
         token_data_t new_token = lexer_next(lexer);
-        printf("%p",new_token.value);
         // check if tokens is out of heap
         if (tokens.count >= tokens.capacity)
         {
