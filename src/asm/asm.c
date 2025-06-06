@@ -3,7 +3,7 @@
 
 void assemble(const char* input_file)
 {
-    FILE* file = fopen(input_file, "r");
+    FILE* file = fopen(input_file, "rb");
 
     // Get file size
     fseek(file, 0, SEEK_END);

@@ -1,9 +1,6 @@
 #ifndef LEXER_H
 #define LEXER_H
 
-// Header kindly adapted from https://github.com/wzid/phi/blob/main/include/lexer.h
-// Written by wzid, or Brain Tickle on YT.
-
 // Standard library
 #include <ctype.h>
 #include <stddef.h>
@@ -50,8 +47,8 @@ typedef enum {
     TOK_CHAR,       // 'a'
     TOK_STRING,     // "hi"
     TOK_INTEGER,    // 0x, 0d, or 0b
-    TOK_IDENTIFIER  // Name of variable or label
-
+    TOK_IDENTIFIER, // Name of variable or label
+    TOK_UNKNOWN
 } token_t;
 // Simple line:col matrix
 typedef struct {

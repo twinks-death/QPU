@@ -7,6 +7,7 @@ token_id (token_data_t* t)
 {
     switch (t->type)
     {
+        case TOK_EOF: return "EOF";
         case TOK_MNEMONIC: return "Mnemonic";
         case TOK_REGISTER: return "Register";
 
@@ -37,7 +38,6 @@ token_id (token_data_t* t)
         case TOK_INTEGER: return "Integer";
         case TOK_IDENTIFIER: return "Identifier";
 
-        case TOK_EOF: return "EOF";
         default: return "Unknown";
     }
 }
@@ -75,20 +75,28 @@ lexer_skip_whitespace (lexer_t* l)
     while (l->index < l->input_size)
     {
         char c = l->input[l->index];
-        if ( c == ' ' || c == '\t' || c == '\r' || c == '\n' ) {
+        if (c == ' ' || c == '\t')
+        {
             l->index++;
-            if (c == '\n' || c == '\r') {
-                l->location.line++;
-                l->location.col = 1;
-            } else {
-                l->location.col++;
-            }
-        } else {
-            break;
+            l->location.col++;
         }
+        else if (c == '\r')
+        {
+            // Handle CRLF or just CR
+            if (l->index + 1 < l->input_size && l->input[l->index + 1] == '\n') { l->index += 2; }
+            else { l->index++; }
+            l->location.line++;
+            l->location.col = 1;
+        }
+        else if (c == '\n')
+        {
+            l->index++;
+            l->location.line++;
+            l->location.col = 1;
+        }
+        else { break; }
     }
 }
-
 
 
 static void
@@ -113,27 +121,31 @@ lexer_next (lexer_t* l)
     // out of chars
     if (l->index >= l->input_size) return token;
     // Directive
-    if (l->input[l->index] == '.' ) {
-        if (is_symbol_start(l->input[++l->index]) ) {
+    if (l->input[l->index] == '.')
+    {
+        if (is_symbol_start(l->input[++l->index]))
+        {
             size_t start = l->index;
-            while ( l->index < l->input_size && is_symbol(l->input[l->index]) ) {
+            while (l->index < l->input_size && is_symbol(l->input[l->index]))
+            {
                 l->index++;
                 token.length++;
             }
             add_token(&token, TOK_DIRECTIVE, &l->input[start], token.length);
             return token;
         }
+        fprintf(stderr, "\nInvalid directive name! At line %llu, col %llu.", l->location.line, l->location.col);
     }
 
     l->index++;
-    return token;
+    return (token_data_t){.type = TOK_UNKNOWN, .value = &l->input[l->index-1], .length = 10};
 }
 
 token_array_t
 lex (lexer_t* lexer, token_array_t tokens)
 {
-    while (lexer->input[lexer->index] != '\0' || tokens.token[tokens.count].type != TOK_EOF)
-    {
+    printf("\n%s", lexer->input);
+    while (lexer->input[lexer->index] != '\0') {
         token_data_t new_token = lexer_next(lexer);
         // check if tokens is out of heap
         if (tokens.count >= tokens.capacity)
@@ -147,6 +159,7 @@ lex (lexer_t* lexer, token_array_t tokens)
             }
         }
         print_token(&new_token);
+
         tokens.token[tokens.count++] = new_token;
     }
 
