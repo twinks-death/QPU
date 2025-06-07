@@ -102,6 +102,7 @@ lex ( lexer_t* lexer, token_array_t tokens )
         if (new_token.type == TOK_EOF) break;
     }
 
+    printf("\nInput: '%s'\nSize: %llu", lexer->input, lexer->input_size);
     print_tokens(&tokens);
 
     return tokens;
