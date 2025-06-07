@@ -65,15 +65,11 @@ typedef struct {
     location_t  location;
 } token_data_t;
 
-/* Token array instance:
-     *token   - pointer to tokens stored in heap
-     count    - total of tokens stored
-     capacity - bytes allocated to *token in heap (256 by default, if out of heap then *= 2)
-*/
+// Token array instance
 typedef struct {
-    token_data_t* token;
-    size_t        count;
-    size_t        capacity;
+    token_data_t* token;    // pointer to tokens stored in heap
+    size_t        count;    // total of tokens stored
+    size_t        capacity; // bytes allocated to *token in heap (256 by default, if out of heap then *= 2)
 } token_array_t;
 
 // Lexer instance structure
