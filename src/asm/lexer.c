@@ -48,11 +48,14 @@ static void
 print_token (token_data_t* t)
 {
     const char* type = token_id(t);
-    printf("\n[%llu:%llu] - ", t->location.line, t->location.col);
-    if (t->value != NULL)
-        printf("%s: %.*s", type, (int)t->length, t->value);
-    else
-        printf("%s", type);
+    if (t->value != NULL) {
+        if (t->type == TOK_UNKNOWN)
+            fprintf(stderr, "\n%s at [%llu:%llu], text: '%.*s...'", type, t->location.line, t->location.col, 5, t->value);
+        else
+            printf("\n%s at [%llu:%llu], text: '%.*s'", type, t->location.line, t->location.col, (int) t->length, t->value);
+    } else {
+        printf("\n%s at [%llu:%llu]", type, t->location.line, t->location.col);
+    }
 }
 
 // Initialize all values inside of lexer struct, and return lexer_t for caller
@@ -138,14 +141,14 @@ lexer_next (lexer_t* l)
     }
 
     l->index++;
-    return (token_data_t){.type = TOK_UNKNOWN, .value = &l->input[l->index-1], .length = 10};
+    return (token_data_t){.type = TOK_UNKNOWN, .value = &l->input[l->index-1], .length = 5, .location = l->location};
 }
 
 token_array_t
 lex (lexer_t* lexer, token_array_t tokens)
 {
     printf("\n%s", lexer->input);
-    while (lexer->input[lexer->index] != '\0') {
+    while (1) {
         token_data_t new_token = lexer_next(lexer);
         // check if tokens is out of heap
         if (tokens.count >= tokens.capacity)
@@ -161,6 +164,8 @@ lex (lexer_t* lexer, token_array_t tokens)
         print_token(&new_token);
 
         tokens.token[tokens.count++] = new_token;
+        if (new_token.type == TOK_EOF)
+            break;
     }
 
     return tokens;

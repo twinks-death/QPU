@@ -7,7 +7,7 @@ void assemble(const char* input_file)
 
     // Get file size
     fseek(file, 0, SEEK_END);
-    size_t file_size = ftell(file);
+    long file_size = ftell(file);
     rewind(file);
 
     // Allocate buffer

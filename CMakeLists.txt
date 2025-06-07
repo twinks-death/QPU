@@ -3,6 +3,15 @@ project(qpu8_emu C)
 
 set(CMAKE_C_STANDARD 23)
 
+# Use Debug as default build type if not specified
+if (NOT CMAKE_BUILD_TYPE)
+    set(CMAKE_BUILD_TYPE Debug CACHE STRING "Build type (Debug/Release/RelWithDebInfo/MinSizeRel)" FORCE)
+endif ()
+
+# Enable debug flags for Debug config, optimization for Release
+set(CMAKE_C_FLAGS_DEBUG "-g -O0")
+set(CMAKE_C_FLAGS_RELEASE "-O3")
+
 # Add SDL3 paths
 set(SDL3_DIR "${PROJECT_SOURCE_DIR}/include/sdl3")
 set(SDL3_LIBRARIES "${SDL3_DIR}/lib")
