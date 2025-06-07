@@ -11,7 +11,7 @@ void assemble ( const char* input_file )
     rewind(file);
 
     // Allocate buffer
-    char* input_buffer = malloc(file_size + 1);
+    char* input_buffer = malloc(file_size);
     if (!input_buffer) {
         perror("Malloc failed bruh");
         fclose(file);

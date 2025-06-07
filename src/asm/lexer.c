@@ -13,6 +13,66 @@ lexer_init ( const char* input, size_t input_size )
     return lexer;
 }
 
+static const char*
+token_id ( token_data_t* t )
+{
+    switch (t->type) {
+        case TOK_EOF: return "EOF";
+        case TOK_MNEMONIC: return "Mnemonic";
+        case TOK_REGISTER: return "Register";
+
+        case TOK_NOT: return "Not";
+        case TOK_AND: return "And";
+        case TOK_OR: return "Or";
+        case TOK_XOR: return "Xor";
+
+        case TOK_LPAREN: return "LParen";
+        case TOK_RPAREN: return "RParen";
+        case TOK_LBRACKET: return "LBracket";
+        case TOK_RBRACKET: return "RBracket";
+        case TOK_COMMA: return "Comma";
+
+        case TOK_PLUS: return "Plus";
+        case TOK_MINUS: return "Minus";
+        case TOK_STAR: return "Star";
+        case TOK_SLASH: return "Slash";
+        case TOK_MOD: return "Mod";
+        case TOK_POINT: return "Point";
+        case TOK_LEFTSHIFT: return "LeftShift";
+        case TOK_RIGHTSHIFT: return "RightShift";
+
+        case TOK_DIRECTIVE: return "Directive";
+        case TOK_TYPE: return "Type";
+        case TOK_CHAR: return "Char";
+        case TOK_STRING: return "String";
+        case TOK_INTEGER: return "Integer";
+        case TOK_IDENTIFIER: return "Identifier";
+
+        default: return "Unknown";
+    }
+}
+
+static void
+print_tokens ( token_array_t* t )
+{
+    for (int i = 0; i < t->count; i++) {
+        printf("\n[%s, '%.*s', (%llu:%llu)]", token_id(&t->token[i]), (int) t->token[i].length, t->token[i].value,
+               t->token[i].location.line, t->token[i].location.col);
+    }
+}
+
+static void
+print_t ( token_data_t* t )
+{
+    const char* type = token_id(t);
+    if (t->value != NULL) {
+        if (t->type == TOK_UNKNOWN) fprintf(stderr, "\n%s at [%llu:%llu], text: '%.*s...'", type, t->location.line, t->location.col, 5, t->value);
+        else printf("\n%s at [%llu:%llu], text: '%.*s'", type, t->location.line, t->location.col, (int) t->length, t->value);
+    } else {
+        printf("\n%s at [%llu:%llu]", type, t->location.line, t->location.col);
+    }
+}
+
 // Increment lexer index smartly, reset collumn & increment line num if new line
 // and skip whitespace Pass: lexer instance
 static void
@@ -61,24 +121,22 @@ lexer_next ( lexer_t* l )
     if (l->index >= l->input_size) return token;
     // Directive
     if (l->input[l->index] == '.') {
-        if (is_symbol_start(l->input[++l->index])) {
+        lexer_advance(l);
+        if (is_symbol_start(l->input[l->index])) {
             size_t start = l->index;
             while (l->index < l->input_size && is_symbol(l->input[l->index])) {
-                l->index++;
+                lexer_advance(l);
                 token.length++;
             }
             add_token(&token, TOK_DIRECTIVE, &l->input[start], token.length);
             return token;
         }
-        fprintf(stderr, "\nInvalid directive name! At [%llu:%llu]", l->location.line, l->location.col);
-    }
+        fprintf(stderr, "\nInvalid directive name! At [%llu:%llu]", l->location.line, l->location.col-1);
+    } else { l->index++; }
 
-    l->index++;
     return (token_data_t){
-        .type = TOK_UNKNOWN,
-        .value = &l->input[l->index - 1],
-        .length = 5,
-        .location = l->location
+        .type = TOK_UNKNOWN, .value = &l->input[l->index - 1],
+        .length = 5, .location = l->location
     };
 }
 
@@ -90,8 +148,7 @@ lex ( lexer_t* lexer, token_array_t tokens )
         // check if tokens is out of heap
         if (tokens.count >= tokens.capacity) {
             tokens.capacity *= 2;
-            tokens.token =
-                realloc(tokens.token, sizeof(token_data_t) * tokens.capacity);
+            tokens.token = realloc(tokens.token, sizeof(token_data_t) * tokens.capacity);
             if (!tokens.token) {
                 perror("Out of memory for tokens");
                 exit(1);
