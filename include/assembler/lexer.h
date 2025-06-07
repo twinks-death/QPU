@@ -86,14 +86,17 @@ typedef struct {
 
 // PRIVATE FUNCTIONS
 static void         lexer_skip_whitespace ( lexer_t* l );
-static void         add_token             ( token_data_t* dest, token_t type, const char* value, size_t length );
-static token_data_t lexer_next            ( lexer_t* l );
+static void         add_token ( token_data_t* dest, token_t type, const char* value, size_t length );
+static token_data_t lexer_next ( lexer_t* l );
 
-static inline bool is_symbol_start ( char x ) { return isalpha(x) || x == '_'; }
+static inline bool
+is_symbol_start ( char x ) { return isalpha(x) || x == '_'; }
 
-static inline bool is_symbol       ( char x ) { return isalnum(x) || x == '_'; }
+static inline bool
+is_symbol ( char x ) { return isalnum(x) || x == '_'; }
 
-static inline const char* token_id ( token_data_t* t )
+static inline const char*
+token_id ( token_data_t* t )
 {
     switch (t->type) {
         case TOK_EOF: return "EOF";
@@ -139,7 +142,8 @@ static inline const char* token_id ( token_data_t* t )
  *          The `token_array_t` should be properly initialized, with `token`,
  *          `count`, and `capacity` appropriately set.
  */
-static inline void print_tokens ( token_array_t* t )
+static inline void
+print_tokens ( token_array_t* t )
 {
     for (int i = 0; i < t->count; i++) {
         printf("\n[%s, '%.*s', (%llu:%llu)]", token_id(&t->token[i]), (int) t->token[i].length, t->token[i].value,
@@ -157,7 +161,8 @@ static inline void print_tokens ( token_array_t* t )
  *          The structure must contain a valid `type`, `location` (line and column),
  *          and optionally `value` and `length` if applicable.
  */
-static inline void print_t ( token_data_t* t )
+static inline void
+print_t ( token_data_t* t )
 {
     const char* type = token_id(t);
     if (t->value != NULL) {

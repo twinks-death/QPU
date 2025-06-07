@@ -75,9 +75,9 @@ lexer_next ( lexer_t* l )
 
     l->index++;
     return (token_data_t){
-        .type     = TOK_UNKNOWN,
-        .value    = &l->input[l->index - 1],
-        .length   = 5,
+        .type = TOK_UNKNOWN,
+        .value = &l->input[l->index - 1],
+        .length = 5,
         .location = l->location
     };
 }

@@ -32,7 +32,8 @@ const char* help = "\nFormat: qpu [-d] [-s] [-t] [-h] [asm/bin file location]"
 // unit tests  if -t flag present
 // usage       if -h flag present
 // speed (mhz) if -s flag present, AND has a number from 0 to 4 inclusive after it
-void parse_flags ( int argc, char** argv, emu_flags_t* emu_flags )
+void
+parse_flags ( int argc, char** argv, emu_flags_t* emu_flags )
 {
     int option;
     while ((option = getopt(argc, argv, "dts:h")) != -1) {
@@ -72,16 +73,13 @@ void parse_flags ( int argc, char** argv, emu_flags_t* emu_flags )
         // If ends with .s - enable assembler, if .bin - do nothing, else - throw error
         if (strcasecmp(argv[optind] + strlen(argv[optind]) - strlen(".s"), ".s") == 0) {
             emu_flags->assemble = 1;
-        }
-        else if (strcasecmp(argv[optind] + strlen(argv[optind]) - strlen(".bin"), ".bin") == 0) {
+        } else if (strcasecmp(argv[optind] + strlen(argv[optind]) - strlen(".bin"), ".bin") == 0) {
             ; // Pass
-        }
-        else {
+        } else {
             fprintf(stderr, "\n'%s' isn't a .s or .bin!\n", argv[optind]);
             exit(1);
         }
-    }
-    else {
+    } else {
         fprintf(stderr, "\nNo bin or asm file provided\n");
         exit(1);
     }
@@ -95,8 +93,8 @@ void parse_flags ( int argc, char** argv, emu_flags_t* emu_flags )
     emu_flags->input_file = argv[optind]; // the first argv after the flags is the valid file path
 }
 
-
-int main ( int argc, char* argv[] )
+int
+main ( int argc, char* argv[] )
 {
     // Default flags - no assembly, no disassembly, no tests, 10mhz clock speed, no file input (nullptr)
     emu_flags_t emu_flags = {false, false, false, 2, nullptr};
@@ -109,7 +107,6 @@ int main ( int argc, char* argv[] )
         fprintf(stderr, "What happened here?: %s:%d", __FILE__, __LINE__); // Mystery
         exit(1);
     }
-
 
     return 0;
 }

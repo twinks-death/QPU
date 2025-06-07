@@ -14,7 +14,6 @@ typedef struct {
     size_t size;
 } assembled_result_t;
 
-
 // In asm.c
 void assemble ( const char* input_file );
 
