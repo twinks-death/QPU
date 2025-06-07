@@ -4,7 +4,7 @@
 #include "machine/qpu8.h"
 
 // Help string
-const char * help = "\nFormat: qpu [-d] [-s] [-t] [-h] [asm/bin file location]"
+const char* help = "\nFormat: qpu [-d] [-s] [-t] [-h] [asm/bin file location]"
     "\n    [The default settings are:"
     "no disassembly, 10mhz speed]"
     "\nFlags: "
@@ -35,18 +35,15 @@ const char * help = "\nFormat: qpu [-d] [-s] [-t] [-h] [asm/bin file location]"
 void parse_flags ( int argc, char** argv, emu_flags_t* emu_flags )
 {
     int option;
-    while ((option = getopt(argc, argv, "dts:h")) != -1)
-    {
-        switch (option)
-        {
+    while ((option = getopt(argc, argv, "dts:h")) != -1) {
+        switch (option) {
             case 'd': emu_flags->disassemble = 1;
                 break;
             case 't': emu_flags->test = 1;
                 break;
-            case 's': char * end;
+            case 's': char* end;
                 byte val = strtol(optarg, &end, 10);
-                if (*end || val > 4)
-                {
+                if (*end || val > 4) {
                     fprintf(stderr, "Invalid speed: '%s'\n", optarg);
                     exit(1);
                 }
@@ -56,19 +53,16 @@ void parse_flags ( int argc, char** argv, emu_flags_t* emu_flags )
                 exit(0);
             case '?': printf(help);
                 exit(1);
-            default:
-                fprintf(stderr, "What happened here?: %s:%d", __FILE__, __LINE__); // Mystery
+            default: fprintf(stderr, "What happened here?: %s:%d", __FILE__, __LINE__); // Mystery
                 exit(1);
         }
     }
 
     // If there's another argument after flags
-    if (optind < argc)
-    {
+    if (optind < argc) {
         // Open the file and check if it exists
-        FILE * file = fopen(argv[optind], "r");
-        if (!file)
-        {
+        FILE* file = fopen(argv[optind], "r");
+        if (!file) {
             perror(argv[optind]);
             exit(1);
         }
@@ -76,32 +70,27 @@ void parse_flags ( int argc, char** argv, emu_flags_t* emu_flags )
 
         // Check file extension
         // If ends with .s - enable assembler, if .bin - do nothing, else - throw error
-        if (strcasecmp(argv[optind] + strlen(argv[optind]) - strlen(".s"), ".s") == 0)
-        {
+        if (strcasecmp(argv[optind] + strlen(argv[optind]) - strlen(".s"), ".s") == 0) {
             emu_flags->assemble = 1;
         }
-        else if (strcasecmp(argv[optind] + strlen(argv[optind]) - strlen(".bin"), ".bin") == 0)
-        {
+        else if (strcasecmp(argv[optind] + strlen(argv[optind]) - strlen(".bin"), ".bin") == 0) {
             ; // Pass
         }
-        else
-        {
+        else {
             fprintf(stderr, "\n'%s' isn't a .s or .bin!\n", argv[optind]);
             exit(1);
         }
     }
-    else
-    {
+    else {
         fprintf(stderr, "\nNo bin or asm file provided\n");
         exit(1);
     }
 
     // If the only arguments are executable name and file path - no flags specified
     if (argc == 2)
-        printf ("\nNo flags specified! The emulator will run under default settings:"
-                "\n[No disassembly, 10mhz speed]");
-    else
-        printf("\nFound %s!\n", argv[optind]); // Success!
+        printf("\nNo flags specified! The emulator will run under default settings:"
+            "\n[No disassembly, 10mhz speed]");
+    else printf("\nFound %s!\n", argv[optind]); // Success!
 
     emu_flags->input_file = argv[optind]; // the first argv after the flags is the valid file path
 }
@@ -114,12 +103,9 @@ int main ( int argc, char* argv[] )
 
     // Populate emu_flags, (dis)assemble based on them
     parse_flags(argc, argv, &emu_flags);
-    if (emu_flags.assemble)
-        assemble(emu_flags.input_file);
-    else if (emu_flags.disassemble)
-        disassemble(emu_flags.input_file);
-    else
-    {
+    if (emu_flags.assemble) assemble(emu_flags.input_file);
+    else if (emu_flags.disassemble) disassemble(emu_flags.input_file);
+    else {
         fprintf(stderr, "What happened here?: %s:%d", __FILE__, __LINE__); // Mystery
         exit(1);
     }

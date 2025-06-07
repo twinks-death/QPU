@@ -13,11 +13,11 @@ typedef uint16_t word;
 
 // Emulator flags
 typedef struct {
-    bool   assemble;
-    bool   disassemble;
-    bool   test;
-    byte   speed;
-    char*  input_file;
+    bool  assemble;
+    bool  disassemble;
+    bool  test;
+    byte  speed;
+    char* input_file;
 } emu_flags_t;
 
 // In emu.c

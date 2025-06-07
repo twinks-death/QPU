@@ -27,6 +27,6 @@ typedef struct {
 } test_result_t;
 
 // In tests.c
-test_result_t test_lexer(lexer_t* lexer);
+test_result_t test_lexer ( lexer_t* lexer );
 
 #endif //TESTS_H

@@ -1,15 +1,8 @@
 #ifndef QPU8_H
 #define QPU8_H
 
-// Memory map:
-// 0x0000 - 0x3FFF: Not banked (Low ram)
-// 0x4000 - 0x7FFF: Banked (High ram)
-// 0x8000 - 0xDFFF: Kernel/OS (Ram, privileged access)
-// 0xE000 - 0xFFFF: BIOS (Rom, privileged access + write protected)
-
 // Project headers
 #include "emulator/emu.h"
-
 
 // Definitions
 #define ADDRESS_SPACE   0x10000
@@ -27,7 +20,11 @@ typedef struct {
     byte memory[ADDRESS_SPACE];
 } MEMORY;
 
-
+// Memory map:
+// 0x0000 - 0x3FFF: Not banked (Low ram)
+// 0x4000 - 0x7FFF: Banked (High ram)
+// 0x8000 - 0xDFFF: Kernel/OS (Ram, privileged access)
+// 0xE000 - 0xFFFF: BIOS (Rom, privileged access + write protected)
 
 /*
 Mnemonic	        Byte 1	    Byte 2	    Byte 3	    Pseudocode
