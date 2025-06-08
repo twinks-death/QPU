@@ -1,5 +1,5 @@
 /*==============================================================================
- qpu8_emu: disasm.c, 2025-06-08, Sun 21:06+0100
+ qpu8_emu: test.c, 2025-06-08, Sun 21:06+0100
 
  Copyright (C) 2025 Twink's Death
 
@@ -20,10 +20,6 @@
  3. This notice may not be removed or altered from any source distribution.
  =============================================================================*/
 
-#include "assembler/asm.h"
-
-int
-disassemble ( const char* input_file )
-{
-    return 0;
-}
+//
+// Created by Стиралка on 08/06/2025.
+//

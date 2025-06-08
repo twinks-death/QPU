@@ -1,3 +1,25 @@
+/*==============================================================================
+ qpu8_emu: lexer.c, 2025-06-08, Sun 21:06+0100
+
+ Copyright (C) 2025 Twink's Death
+
+ This software is provided 'as-is', without any express or implied
+ warranty. In no event will the authors be held liable for any damages
+ arising from the use of this software.
+
+ Permission is granted to anyone to use this software for any purpose,
+ including commercial applications, and to alter it and redistribute it
+ freely, subject to the following restrictions:
+
+ 1. The origin of this software must not be misrepresented; you must not
+    claim that you wrote the original software. If you use this software
+    in a product, an acknowledgment in the product documentation would be
+    appreciated but is not required.
+ 2. Altered source versions must be plainly marked as such, and must not be
+    misrepresented as being the original software.
+ 3. This notice may not be removed or altered from any source distribution.
+ =============================================================================*/
+
 #include "assembler/lexer.h"
 
 // Initialize all values inside of lexer struct, and return lexer_t for caller
@@ -131,7 +153,7 @@ lexer_next ( lexer_t* l )
             add_token(&token, TOK_DIRECTIVE, &l->input[start], token.length);
             return token;
         }
-        fprintf(stderr, "\nInvalid directive name! At [%llu:%llu]", l->location.line, l->location.col-1);
+        fprintf(stderr, "\nInvalid directive name! At [%llu:%llu]", l->location.line, --l->location.col);
     } else { l->index++; }
 
     return (token_data_t){
