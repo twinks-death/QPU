@@ -1,3 +1,11 @@
+/*==============================================================================
+ Copyright (c) 2025 Twink's Death
+ SPDX-License-Identifier: BSD-3-Clause
+ See the LICENSE file in repo's root for details.
+
+ qpu8_emu: asm.h
+ =============================================================================*/
+
 #ifndef ASM_H
 #define ASM_H
 

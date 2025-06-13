@@ -1,3 +1,11 @@
+/*==============================================================================
+ Copyright (c) 2025 Twink's Death
+ SPDX-License-Identifier: BSD-3-Clause
+ See the LICENSE file in repo's root for details.
+
+ qpu8_emu: tests.h
+ =============================================================================*/
+
 #ifndef TESTS_H
 #define TESTS_H
 
