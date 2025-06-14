@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.31)
 project(qpu8_emu C)
 
-set(CMAKE_C_STANDARD 23)
+set(CMAKE_C_STANDARD 11)
 
 # Use Debug as default build type if not specified
 if (NOT CMAKE_BUILD_TYPE)
@@ -37,7 +37,6 @@ file(GLOB_RECURSE SRC_FILES CONFIGURE_DEPENDS
 
 # Add sources to the target
 target_sources(qpu8_emu PRIVATE ${SRC_FILES})
-
 
 target_compile_options(qpu8_emu PRIVATE
         -O3

@@ -13,8 +13,7 @@
 
 // Help string
 const char* help = "\nFormat: qpu [-d] [-s] [-t] [-h] [asm/bin file location]"
-    "\n    [The default settings are:"
-    "no disassembly, 10mhz speed]"
+    "\n    [The default settings are: no disassembly, 10mhz speed]"
     "\nFlags: "
     "\n-d - disassemble"
     "\n    [creates a copy of the binary loaded with '_disasm' postfix in /asm]"
@@ -34,12 +33,12 @@ const char* help = "\nFormat: qpu [-d] [-s] [-t] [-h] [asm/bin file location]"
     "\n-h - help"
     "\n    [ignores all other flags and prints allat]\n";
 
-// Takes in arguments from *argv[] and sets emu_flags based on them:
+// Takes in arguments from ** argv and sets emu_flags based on them:
 // disassemble if -d flag present
 // assemble    if input_file is .s
 // unit tests  if -t flag present
-// usage       if -h flag present
 // speed (mhz) if -s flag present, AND has a number from 0 to 4 inclusive after it
+// print usage if -h flag present and quit
 void
 parse_flags ( int argc, char** argv, emu_flags_t* emu_flags )
 {
@@ -69,7 +68,6 @@ parse_flags ( int argc, char** argv, emu_flags_t* emu_flags )
 
     // If there's another argument after flags
     if (optind < argc) {
-        // Open the file and check if it exists
         FILE* file = fopen(argv[optind], "r");
         if (!file) {
             perror(argv[optind]);
@@ -92,20 +90,21 @@ parse_flags ( int argc, char** argv, emu_flags_t* emu_flags )
         exit(1);
     }
 
-    // If the only arguments are executable name and file path - no flags specified
+    // Fallback: if the only arguments are executable name and file path - no flags specified
     if (argc == 2)
         printf("\nNo flags specified! The emulator will run under default settings:"
             "\n[No disassembly, 10mhz speed]");
-    else printf("\nFound %s!\n", argv[optind]); // Success!
 
+
+    printf("\nFound %s!\n", argv[optind]); // Success! Todo: remove later
     emu_flags->input_file = argv[optind]; // the first argv after the flags is the valid file path
 }
 
 int
 main ( int argc, char* argv[] )
 {
-    // Default flags - no assembly, no disassembly, no tests, 10mhz clock speed, no file input (nullptr)
-    emu_flags_t emu_flags = {false, false, false, 2, nullptr};
+    // Default flags - no assembly, no disassembly, no tests, 10mhz clock speed, no file input nullptr
+    emu_flags_t emu_flags = {false, false, false, 2, NULL};
 
     // Populate emu_flags, (dis)assemble based on them
     parse_flags(argc, argv, &emu_flags);
