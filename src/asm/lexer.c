@@ -126,10 +126,10 @@ lexer_next ( lexer_t* l )
 
     token_data_t token = {.length = 0, .location = l->location};
 
-    // out of chars
-    if (l->index >= l->input_size) return token;
-    // Directive
-    if (l->input[l->index] == '.') {
+    if (l->index == l->input_size) { // out of chars
+        l->location.col++;
+        return (token_data_t){0,NULL, 0, l->location};
+    } else if (l->input[l->index] == '.') { // directive
         lexer_advance(l);
         if (is_symbol_start(l->input[l->index])) {
             size_t start = l->index;
