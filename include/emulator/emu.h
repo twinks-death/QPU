@@ -14,6 +14,8 @@
 #include <stdbool.h>
 #include <stdint.h>
 #include <unistd.h>
+#include <string.h>
+#include <strings.h>
 
 // Types
 typedef uint8_t  byte;
