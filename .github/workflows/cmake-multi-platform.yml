@@ -24,12 +24,12 @@ jobs:
             c_compiler: clang
             cpp_compiler: clang++
           - os: windows-latest
-            c_compiler: clang
-            cpp_compiler: clang++
+            c_compiler: gcc
+            cpp_compiler: g++
 
         exclude:
           - os: windows-latest
-            c_compiler: gcc # no gcc on windows via default GitHub runner
+            c_compiler: clang 
 
     steps:
       - uses: actions/checkout@v4
@@ -45,7 +45,8 @@ jobs:
 
       - name: Configure CMake
         run: >
-          cmake -B ${{ steps.vars.outputs.out_dir }}
+          cmake -G "MinGW Makefiles"
+          -B ${{ steps.vars.outputs.out_dir }}
           -DCMAKE_C_COMPILER=${{ matrix.c_compiler }}
           -DCMAKE_CXX_COMPILER=${{ matrix.cpp_compiler }}
           -DCMAKE_BUILD_TYPE=${{ matrix.build_type }}
