@@ -70,17 +70,17 @@ print_tokens ( token_array_t* t )
     }
 }
 
-static void
-print_t ( token_data_t* t )
-{
-    const char* type = token_id(t);
-    if (t->value != NULL) {
-        if (t->type == TOK_UNKNOWN) fprintf(stderr, "\n%s at [%llu:%llu], text: '%.*s...'", type, t->location.line, t->location.col, 5, t->value);
-        else printf("\n%s at [%llu:%llu], text: '%.*s'", type, t->location.line, t->location.col, (int) t->length, t->value);
-    } else {
-        printf("\n%s at [%llu:%llu]", type, t->location.line, t->location.col);
-    }
-}
+// static void
+// print_t ( token_data_t* t )
+// {
+//     const char* type = token_id(t);
+//     if (t->value != NULL) {
+//         if (t->type == TOK_UNKNOWN) fprintf(stderr, "\n%s at [%llu:%llu], text: '%.*s...'", type, t->location.line, t->location.col, 5, t->value);
+//         else printf("\n%s at [%llu:%llu], text: '%.*s'", type, t->location.line, t->location.col, (int) t->length, t->value);
+//     } else {
+//         printf("\n%s at [%llu:%llu]", type, t->location.line, t->location.col);
+//     }
+// }
 
 // Increment lexer index smartly, reset collumn & increment line num if new line
 // and skip whitespace Pass: lexer instance
