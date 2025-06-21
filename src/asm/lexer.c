@@ -90,8 +90,7 @@ lexer_skip_whitespace ( lexer_t* l )
     while (l->index < l->input_size) {
         char c = l->input[l->index];
         if (c == ' ' || c == '\t') {
-            l->index++;
-            l->location.col++;
+            lexer_advance(l);
         } else if (c == '\r') {
             // Handle CRLF or just CR
             if (l->index + 1 < l->input_size && l->input[l->index + 1] == '\n') {
@@ -127,7 +126,8 @@ lexer_next ( lexer_t* l )
     token_data_t token = {.length = 0, .location = l->location};
 
     if (l->index == l->input_size) { // out of chars
-        l->location.col++;
+        if (!isspace(l->input[l->index-1]))
+            l->location.col++;
         return (token_data_t){0,NULL, 0, l->location};
     } else if (l->input[l->index] == '.') { // directive
         lexer_advance(l);
@@ -141,13 +141,13 @@ lexer_next ( lexer_t* l )
             return token;
         }
         fprintf(stderr, "\nInvalid directive name! At [%llu:%llu]", l->location.line, --l->location.col);
-    } else { l->index++; }
+    } else { lexer_advance(l); }
 
     return (token_data_t){
         .type = TOK_UNKNOWN, .value = &l->input[l->index - 1],
         .length = 5, .location = l->location
     };
-}
+}  
 
 token_array_t
 lex ( lexer_t* lexer, token_array_t tokens )
