@@ -45,7 +45,7 @@ jobs:
 
       - name: Configure CMake
         run: >
-          cmake -G "MinGW Makefiles"
+          cmake -G "${{ matrix.os == 'windows-latest' && 'MinGW Makefiles' || 'Unix Makefiles' }}"
           -B ${{ steps.vars.outputs.out_dir }}
           -DCMAKE_C_COMPILER=${{ matrix.c_compiler }}
           -DCMAKE_CXX_COMPILER=${{ matrix.cpp_compiler }}
