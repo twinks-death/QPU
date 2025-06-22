@@ -70,7 +70,7 @@ jobs:
         if: matrix.os == 'windows-latest'
         run: >
           cmake
-          -G "MSYS Makefiles"
+          -G "Ninja"
           -B "$(cygpath -u '${{ steps.vars.outputs.out_dir }}')"
           -S "$(cygpath -u '${{ github.workspace }}')"
           -DCMAKE_C_COMPILER=${{ matrix.c_compiler }}
