@@ -70,11 +70,12 @@ jobs:
         if: matrix.os == 'windows-latest'
         run: >
           cmake
-          -B ${{ steps.vars.outputs.out_dir }}
+          -G "Ninja"
+          -B "$(cygpath -u '${{ steps.vars.outputs.out_dir }}')"
+          -S "$(cygpath -u '${{ github.workspace }}')"
           -DCMAKE_C_COMPILER=${{ matrix.c_compiler }}
           -DCMAKE_CXX_COMPILER=${{ matrix.cpp_compiler }}
           -DCMAKE_BUILD_TYPE=${{ matrix.build_type }}
-          -S ${{ github.workspace }}
         shell: msys2 {0}
 
       - name: Build (Linux/macOS)
