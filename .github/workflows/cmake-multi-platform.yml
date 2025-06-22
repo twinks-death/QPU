@@ -70,7 +70,6 @@ jobs:
         if: matrix.os == 'windows-latest'
         run: >
           cmake
-          -G "Ninja"
           -B "$(cygpath -u '${{ steps.vars.outputs.out_dir }}')"
           -S "$(cygpath -u '${{ github.workspace }}')"
           -DCMAKE_C_COMPILER=${{ matrix.c_compiler }}
@@ -85,7 +84,7 @@ jobs:
 
       - name: Build (Windows/MSYS2)
         if: matrix.os == 'windows-latest'
-        run: cmake --build ${{ steps.vars.outputs.out_dir }} --config ${{ matrix.build_type }}
+        run: cmake --build "$(cygpath -u '${{ steps.vars.outputs.out_dir }}')" --config ${{ matrix.build_type }}
         shell: msys2 {0}
 
       - name: Run Tests (Linux/macOS)
@@ -96,6 +95,6 @@ jobs:
 
       - name: Run Tests (Windows/MSYS2)
         if: matrix.os == 'windows-latest'
-        working-directory: ${{ steps.vars.outputs.out_dir }}
+        working-directory: "$(cygpath -u '${{ steps.vars.outputs.out_dir }}')"
         run: ctest --build-config ${{ matrix.build_type }}
         shell: msys2 {0}
