@@ -99,10 +99,13 @@ jobs:
         run: ctest --build-config ${{ matrix.build_type }}
         shell: msys2 {0}
 
-      - name: Upload Executable Artifact
+  gather:
+    needs: [build]
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Upload All Executables
         uses: actions/upload-artifact@v4
         with:
-          name: ${{ matrix.os }}-${{ matrix.c_compiler }}-exe
-          path: |
-            ${{ steps.vars.outputs.out_dir }}/*.exe
-
+          name: all-platform-exes
+          path: ./artifacts
