@@ -26,35 +26,78 @@ jobs:
           - os: windows-latest
             c_compiler: gcc
             cpp_compiler: g++
+            cmake_generator: "MSYS Makefiles"
+          - os: windows-latest
+            c_compiler: clang
+            cpp_compiler: clang++
+            cmake_generator: "MSYS Makefiles"
 
         exclude:
           - os: windows-latest
-            c_compiler: clang 
+            c_compiler: cl
 
     steps:
       - uses: actions/checkout@v4
 
-      - name: Install MinGW (if needed for Clang on Windows)
+      - name: Install MSYS2 and toolchains
         if: matrix.os == 'windows-latest'
-        run: choco install mingw -y
+        uses: msys2/setup-msys2@v2
+        with:
+          update: true
+          install: >-
+            base-devel
+            mingw-w64-x86_64-gcc
+            mingw-w64-x86_64-clang
+            cmake
+            make
 
       - name: Set up build directory path
         id: vars
         shell: bash
         run: echo "out_dir=${{ github.workspace }}/build" >> "$GITHUB_OUTPUT"
 
-      - name: Configure CMake
+      - name: Configure CMake (Linux/macOS)
+        if: matrix.os != 'windows-latest'
         run: >
-          cmake -G "${{ matrix.os == 'windows-latest' && 'MinGW Makefiles' || 'Unix Makefiles' }}"
+          cmake
+          -G "Unix Makefiles"
           -B ${{ steps.vars.outputs.out_dir }}
           -DCMAKE_C_COMPILER=${{ matrix.c_compiler }}
           -DCMAKE_CXX_COMPILER=${{ matrix.cpp_compiler }}
           -DCMAKE_BUILD_TYPE=${{ matrix.build_type }}
           -S ${{ github.workspace }}
+        shell: bash
 
-      - name: Build
+      - name: Configure CMake (Windows/MSYS2)
+        if: matrix.os == 'windows-latest'
+        run: >
+          cmake
+          -G "${{ matrix.cmake_generator }}"
+          -B ${{ steps.vars.outputs.out_dir }}
+          -DCMAKE_C_COMPILER=${{ matrix.c_compiler }}
+          -DCMAKE_CXX_COMPILER=${{ matrix.cpp_compiler }}
+          -DCMAKE_BUILD_TYPE=${{ matrix.build_type }}
+          -S ${{ github.workspace }}
+        shell: msys2 {0}
+
+      - name: Build (Linux/macOS)
+        if: matrix.os != 'windows-latest'
         run: cmake --build ${{ steps.vars.outputs.out_dir }} --config ${{ matrix.build_type }}
+        shell: bash
 
-      - name: Run Tests
+      - name: Build (Windows/MSYS2)
+        if: matrix.os == 'windows-latest'
+        run: cmake --build ${{ steps.vars.outputs.out_dir }} --config ${{ matrix.build_type }}
+        shell: msys2 {0}
+
+      - name: Run Tests (Linux/macOS)
+        if: matrix.os != 'windows-latest'
         working-directory: ${{ steps.vars.outputs.out_dir }}
         run: ctest --build-config ${{ matrix.build_type }}
+        shell: bash
+
+      - name: Run Tests (Windows/MSYS2)
+        if: matrix.os == 'windows-latest'
+        working-directory: ${{ steps.vars.outputs.out_dir }}
+        run: ctest --build-config ${{ matrix.build_type }}
+        shell: msys2 {0}
