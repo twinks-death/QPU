@@ -29,7 +29,6 @@ jobs:
           - os: windows-latest
             c_compiler: clang
             cpp_compiler: clang++
-
         exclude:
           - os: windows-latest
             c_compiler: cl
@@ -98,6 +97,12 @@ jobs:
         working-directory: ${{ steps.vars.outputs.out_dir }}
         run: ctest --build-config ${{ matrix.build_type }}
         shell: msys2 {0}
+
+      - name: Upload Executables
+        uses: actions/upload-artifact@v4
+        with:
+          name: executables-${{ matrix.os }}-${{ matrix.c_compiler }}
+          path: ${{ steps.vars.outputs.out_dir }}/*  # Adjust this path if your executables are in a subfolder
 
   gather:
     needs: [build]
