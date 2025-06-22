@@ -26,9 +26,13 @@ jobs:
           - os: windows-latest
             c_compiler: gcc
             cpp_compiler: g++
+            shell: msys2 {0}
+            cmake_generator: "MSYS Makefiles"
           - os: windows-latest
             c_compiler: clang
             cpp_compiler: clang++
+            shell: msys2 {0}
+            cmake_generator: "MSYS Makefiles"
 
         exclude:
           - os: windows-latest
@@ -37,9 +41,17 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Install MinGW (if needed for Clang on Windows)
+      - name: Install MSYS2 and toolchains
         if: matrix.os == 'windows-latest'
-        run: choco install mingw -y
+        uses: msys2/setup-msys2@v2
+        with:
+          update: true
+          install: >-
+            base-devel
+            mingw-w64-x86_64-gcc
+            mingw-w64-x86_64-clang
+            cmake
+            make
 
       - name: Set up build directory path
         id: vars
@@ -48,16 +60,20 @@ jobs:
 
       - name: Configure CMake
         run: >
-          cmake -G "${{ matrix.os == 'windows-latest' && 'MinGW Makefiles' || 'Unix Makefiles' }}"
+          cmake
+          -G "${{ matrix.os == 'windows-latest' && matrix.cmake_generator || 'Unix Makefiles' }}"
           -B ${{ steps.vars.outputs.out_dir }}
           -DCMAKE_C_COMPILER=${{ matrix.c_compiler }}
           -DCMAKE_CXX_COMPILER=${{ matrix.cpp_compiler }}
           -DCMAKE_BUILD_TYPE=${{ matrix.build_type }}
           -S ${{ github.workspace }}
+        shell: ${{ matrix.shell || 'bash' }}
 
       - name: Build
         run: cmake --build ${{ steps.vars.outputs.out_dir }} --config ${{ matrix.build_type }}
+        shell: ${{ matrix.shell || 'bash' }}
 
       - name: Run Tests
         working-directory: ${{ steps.vars.outputs.out_dir }}
         run: ctest --build-config ${{ matrix.build_type }}
+        shell: ${{ matrix.shell || 'bash' }}
