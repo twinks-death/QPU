@@ -26,11 +26,11 @@ jobs:
           - os: windows-latest
             c_compiler: gcc
             cpp_compiler: g++
-            cmake_generator: "MSYS Makefiles"
+            cmake_generator: "MINGW Makefiles"
           - os: windows-latest
             c_compiler: clang
             cpp_compiler: clang++
-            cmake_generator: "MSYS Makefiles"
+            cmake_generator: "MINGW Makefiles"
 
         exclude:
           - os: windows-latest
