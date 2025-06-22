@@ -26,11 +26,9 @@ jobs:
           - os: windows-latest
             c_compiler: gcc
             cpp_compiler: g++
-            cmake_generator: "Ninja"
           - os: windows-latest
             c_compiler: clang
             cpp_compiler: clang++
-            cmake_generator: "Ninja"
 
         exclude:
           - os: windows-latest
@@ -72,7 +70,6 @@ jobs:
         if: matrix.os == 'windows-latest'
         run: >
           cmake
-          -G "${{ matrix.cmake_generator }}"
           -B ${{ steps.vars.outputs.out_dir }}
           -DCMAKE_C_COMPILER=${{ matrix.c_compiler }}
           -DCMAKE_CXX_COMPILER=${{ matrix.cpp_compiler }}
