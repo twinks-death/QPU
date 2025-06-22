@@ -95,6 +95,6 @@ jobs:
 
       - name: Run Tests (Windows/MSYS2)
         if: matrix.os == 'windows-latest'
-        working-directory: "$(cygpath -u '${{ steps.vars.outputs.out_dir }}')"
+        working-directory: ${{ steps.vars.outputs.out_dir }}
         run: ctest --build-config ${{ matrix.build_type }}
         shell: msys2 {0}
