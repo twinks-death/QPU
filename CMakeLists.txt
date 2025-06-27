@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.31.6)
 project(qpu8_emu C)
 
-set(CMAKE_C_STANDARD 11)
+set(CMAKE_C_STANDARD 23)
 
 # Use Debug as default build type if not specified
 if (NOT CMAKE_BUILD_TYPE)
