@@ -4,9 +4,9 @@ project(qpu8_emu C)
 set(CMAKE_C_STANDARD 23)
 
 # Use Debug as default build type if not specified
-if (NOT CMAKE_BUILD_TYPE)
-    set(CMAKE_BUILD_TYPE Debug CACHE STRING "Build type (Debug/Release/RelWithDebInfo/MinSizeRel)" FORCE)
-endif ()
+# if (NOT CMAKE_BUILD_TYPE)
+#     set(CMAKE_BUILD_TYPE Debug CACHE STRING "Build type (Debug/Release/RelWithDebInfo/MinSizeRel)" FORCE)
+# endif ()
 
 # Enable debug flags for Debug config, optimization for Release
 set(CMAKE_C_FLAGS_DEBUG "-g -O0")
