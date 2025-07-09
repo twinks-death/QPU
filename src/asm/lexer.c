@@ -9,7 +9,7 @@
 // Project headers
 #include "assembler/lexer.h"
 
-// Initialize all values inside of lexer struct, and return lexer_t for caller
+// Initialize all values inside lexer struct, and return lexer_t for caller
 lexer_t
 lexer_init ( const char* input, size_t input_size )
 {
