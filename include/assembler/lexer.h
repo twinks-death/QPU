@@ -77,14 +77,14 @@ typedef struct {
 typedef struct {
     token_data_t* token;    // pointer to tokens stored in heap
     size_t        count;    // total of tokens stored
-    size_t        capacity; // bytes allocated to *token in heap (256 by default, if out of heap then *= 2)
+    size_t        capacity; // bytes allocated to *token in heap (256 by default, if out of heap, then *= 2)
 } token_array_t;
 
 // Lexer instance structure
 typedef struct {
     const char* input;      // pointer to input buffer (declared in asm.c)
     size_t      input_size; // Input size in bytes
-    location_t  location;   // Location of current token being tokenized
+    location_t  location;   // Location of the current token being tokenised
     size_t      index;      // Current index of lexer
 } lexer_t;
 

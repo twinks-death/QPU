@@ -82,7 +82,7 @@ print_tokens ( token_array_t* t )
 //     }
 // }
 
-// Increment lexer index smartly, reset collumn & increment line num if new line
+// Increment lexer index smartly, reset column & increment line num if new line
 // and skip whitespace Pass: lexer instance
 static void
 lexer_skip_whitespace ( lexer_t* l )
@@ -125,11 +125,13 @@ lexer_next ( lexer_t* l )
 
     token_data_t token = {.length = 0, .location = l->location};
 
-    if (l->index == l->input_size) { // out of chars
-        if (!isspace(l->input[l->index-1]))
-            l->location.col++;
-        return (token_data_t){0,NULL, 0, l->location};
-    } else if (l->input[l->index] == '.') { // directive
+    // out of chars - EOF
+    if (l->index >= l->input_size) {
+        return (token_data_t){TOK_EOF, nullptr, 0, l->location};
+    }
+
+    // directive
+    else if (l->input[l->index] == '.') {
         lexer_advance(l);
         if (is_symbol_start(l->input[l->index])) {
             size_t start = l->index;
@@ -140,14 +142,29 @@ lexer_next ( lexer_t* l )
             add_token(&token, TOK_DIRECTIVE, &l->input[start], token.length);
             return token;
         }
-        fprintf(stderr, "\nInvalid directive name! At [%llu:%llu]", l->location.line, --l->location.col);
-    } else { lexer_advance(l); }
+        fprintf(stderr, "\nInvalid directive name! At [%llu:%llu]", l->location.line, l->location.col - 1);
 
-    return (token_data_t){
-        .type = TOK_UNKNOWN, .value = &l->input[l->index - 1],
-        .length = 5, .location = l->location
-    };
-}  
+        return (token_data_t){
+            .type = TOK_UNKNOWN, .value = &l->input[l->index - 1],
+            .length = 1, .location = (location_t){l->location.line, l->location.col - 1}
+        };
+        // l->location.col-1 is here to adjust for the fact that if the directive declared is just a rogue dot, the 'invalid directive name!' error
+        //                   outputs the location of the dot itself, while the rest of the lexer has to carry on and keep the column index updated
+    }
+
+    // Unknown
+    if (is_symbol_start(l->input[l->index])) {
+        size_t start = l->index;
+        while (l->index < l->input_size && is_symbol(l->input[l->index])) {
+            lexer_advance(l);
+            token.length++;
+        }
+        add_token(&token, TOK_UNKNOWN, &l->input[start], 1);
+        return token;
+    }
+    lexer_advance(l);
+    return token;
+}
 
 token_array_t
 lex ( lexer_t* lexer, token_array_t tokens )
